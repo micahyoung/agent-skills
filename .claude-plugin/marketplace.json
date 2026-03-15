@@ -1,0 +1,11 @@
+{
+  "name": "agent-skills",
+  "owner": {
+    "name": "agent-skills"
+  },
+  "metadata": {
+    "description": "Community skills marketplace for Claude Code",
+    "version": "1.0.0"
+  },
+  "plugins": []
+}
