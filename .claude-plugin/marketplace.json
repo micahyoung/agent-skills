@@ -1,11 +1,21 @@
 {
-  "name": "agent-skills",
+  "name": "micahyoung-agent-skills",
   "owner": {
-    "name": "agent-skills"
+    "name": "micahyoung"
   },
   "metadata": {
     "description": "Community skills marketplace for Claude Code",
     "version": "1.0.0"
   },
-  "plugins": []
+  "plugins": [
+    {
+      "name": "genealogy",
+      "description": "Parse, explore, and edit GEDCOM (.ged) genealogy files. Use this skill whenever the user mentions a .ged file, GEDCOM data, family trees, ancestry, genealogy research, lineage, ancestors, descendants, pedigree charts, or wants to look up relatives, trace family connections, or correct/update genealogical records.",
+      "source": "./",
+      "strict": true,
+      "skills": [
+        "./skills/genealogy"
+      ]
+    }
+  ]
 }

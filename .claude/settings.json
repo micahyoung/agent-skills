@@ -1,0 +1,12 @@
+{
+  "enabledPlugins": {
+    "skill-creator@claude-plugins-official": true
+  },
+  "permissions": {
+    "allow": [
+      "Bash(uv run *)",
+      "Bash(cat *)",
+      "Write(genealogy-workspace/*)"
+    ]
+  }
+}
