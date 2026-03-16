@@ -7,13 +7,7 @@ description: >
   connections, or correct/update genealogical records. Also trigger when the user has a .ged
   file open or referenced in conversation and asks questions about people, families, dates,
   or relationships — even if they don't say "genealogy" explicitly.
-compatibility:
-  tools:
-    - Bash (for running Python scripts)
-    - Read (for reading .ged files)
-    - Write (for writing updated .ged files)
-  dependencies:
-    - uv
+compatibility: Requires uv. Uses Bash, Read, and Write tools.
 ---
 
 # Genealogy Skill
