@@ -1,0 +1,212 @@
+0 HEAD
+1 SOUR GenealogySkillTest
+2 VERS 1.0
+2 NAME Genealogy Skill Test Data
+1 DEST ANY
+1 DATE 15 MAR 2026
+1 SUBM @SUB1@
+1 GEDC
+2 VERS 5.5
+2 FORM LINEAGE-LINKED
+1 CHAR UTF-8
+0 @SUB1@ SUBM
+1 NAME Skill Creator
+0 @I1@ INDI
+1 NAME Roderick Talmadge /Varnell/
+2 GIVN Roderick Talmadge
+2 SURN Varnell
+2 NICK Rod
+1 SEX M
+1 BIRT
+2 DATE 17 SEP 1931
+2 PLCE Millhaven, USA
+1 OCCU Retired
+1 NOTE Grandfather figure. Korean War veteran.
+1 FAMS @F1@
+1 FAMS @F3@
+0 @I2@ INDI
+1 NAME Estelle Nadine /Varnell/
+2 GIVN Estelle Nadine
+2 SURN Varnell
+2 _MARNM Varnell
+1 SEX F
+1 BIRT
+2 DATE 22 JUL 1933
+2 PLCE Millhaven, USA
+1 DEAT
+2 DATE 8 MAR 2012
+2 PLCE Millhaven, USA
+1 NOTE Folk musician who left the family to tour for many years.
+1 FAMS @F1@
+0 @I3@ INDI
+1 NAME Dennis Wayne /Varnell/
+2 GIVN Dennis Wayne
+2 SURN Varnell
+1 SEX M
+1 BIRT
+2 DATE 5 OCT 1960
+2 PLCE Millhaven, USA
+1 OCCU Maintenance Technician, Millhaven Grain Processing
+1 NOTE Dennis works the night shift at the grain elevator on Route 9.
+1 FAMC @F1@
+1 FAMS @F2@
+0 @I4@ INDI
+1 NAME Lorraine Decker /Varnell/
+2 GIVN Lorraine
+2 SURN Decker
+2 _MARNM Varnell
+2 NICK Lori
+1 SEX F
+1 BIRT
+2 DATE 3 JUN 1960
+2 PLCE Millhaven, USA
+1 OCCU Homemaker
+1 NOTE Known for her extensive hat collection.
+1 FAMC @F4@
+1 FAMS @F2@
+0 @I5@ INDI
+1 NAME Clayton Rufus /Varnell/
+2 GIVN Clayton Rufus
+2 SURN Varnell
+2 NICK Clay
+1 SEX M
+1 BIRT
+2 DATE 14 NOV 1984
+2 PLCE Millhaven, USA
+1 OCCU Student, Millhaven Middle School
+1 NOTE Eldest child of Dennis and Lorraine.
+1 FAMC @F2@
+0 @I6@ INDI
+1 NAME Nora Colleen /Varnell/
+2 GIVN Nora Colleen
+2 SURN Varnell
+1 SEX F
+1 BIRT
+2 DATE 27 FEB 1987
+2 PLCE Millhaven, USA
+1 OCCU Student, Millhaven Middle School
+1 NOTE Accomplished student, plays the cello, volunteers at the animal shelter.
+1 FAMC @F2@
+0 @I7@ INDI
+1 NAME Judith Elaine /Varnell/
+2 GIVN Judith Elaine
+2 SURN Varnell
+2 NICK Jude
+1 SEX F
+1 BIRT
+2 DATE 20 APR 1993
+2 PLCE Millhaven, USA
+1 NOTE Youngest Varnell child. Selectively mute.
+1 FAMC @F2@
+0 @I8@ INDI
+1 NAME Warren /Decker/
+2 GIVN Warren
+2 SURN Decker
+1 SEX M
+1 BIRT
+2 DATE 9 MAR 1929
+2 PLCE Millhaven, USA
+1 OCCU Railroad Conductor (retired)
+1 NOTE Father of Lorraine, Greta, and Faye.
+1 FAMS @F4@
+0 @I9@ INDI
+1 NAME Opal /Decker/
+2 GIVN Opal
+2 SURN Decker
+2 _MARNM Decker
+1 SEX F
+1 BIRT
+2 DATE 11 DEC 1930
+2 PLCE Millhaven, USA
+1 NOTE Mother of Lorraine, Greta, and Faye.
+1 FAMS @F4@
+0 @I10@ INDI
+1 NAME Greta Constance /Decker/
+2 GIVN Greta Constance
+2 SURN Decker
+1 SEX F
+1 BIRT
+2 DATE 3 JUN 1960
+2 PLCE Millhaven, USA
+1 OCCU Postal Clerk
+1 NOTE Twin sister of Faye. Works at the post office.
+1 FAMC @F4@
+0 @I11@ INDI
+1 NAME Faye /Decker/
+2 GIVN Faye
+2 SURN Decker
+1 SEX F
+1 BIRT
+2 DATE 3 JUN 1960
+2 PLCE Millhaven, USA
+1 OCCU Postal Clerk
+1 NOTE Twin sister of Greta. Has been married multiple times.
+1 FAMC @F4@
+1 FAMS @F5@
+0 @I12@ INDI
+1 NAME Suki /Decker/
+2 GIVN Suki
+2 SURN Decker
+1 SEX F
+1 BIRT
+2 DATE 2009
+2 PLCE Guatemala
+1 NOTE Adopted daughter of Faye Decker.
+1 ADOP
+2 DATE 2009
+2 FAMC @F5@
+1 FAMC @F5@
+0 @I13@ INDI
+1 NAME Malcolm /Caine/
+2 GIVN Malcolm
+2 SURN Caine
+2 NICK Mal
+1 SEX M
+1 BIRT
+2 DATE 1957
+2 PLCE Dunmore, USA
+1 OCCU Furniture Maker
+1 NOTE Dennis's half-brother. Former owner of Caine Woodworks.
+1 FAMC @F3@
+0 @I14@ INDI
+1 NAME Unknown //
+2 GIVN Unknown
+1 SEX F
+1 NOTE Mother of Malcolm Caine. Had a brief relationship with Roderick Varnell.
+1 FAMS @F3@
+0 @F1@ FAM
+1 HUSB @I1@
+1 WIFE @I2@
+1 CHIL @I3@
+1 MARR
+2 DATE 1959
+2 PLCE Millhaven, USA
+0 @F2@ FAM
+1 HUSB @I3@
+1 WIFE @I4@
+1 CHIL @I5@
+1 CHIL @I6@
+1 CHIL @I7@
+1 MARR
+2 DATE 1982
+2 PLCE Millhaven, USA
+1 NOTE The Varnell nuclear family.
+0 @F3@ FAM
+1 HUSB @I1@
+1 WIFE @I14@
+1 CHIL @I13@
+1 NOTE Roderick Varnell's earlier relationship before Estelle.
+0 @F4@ FAM
+1 HUSB @I8@
+1 WIFE @I9@
+1 CHIL @I4@
+1 CHIL @I10@
+1 CHIL @I11@
+1 MARR
+2 DATE 1956
+2 PLCE Millhaven, USA
+0 @F5@ FAM
+1 WIFE @I11@
+1 CHIL @I12@
+1 NOTE Faye as single adoptive parent.
+0 TRLR

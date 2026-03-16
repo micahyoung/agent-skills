@@ -1,0 +1,35 @@
+{
+  "skill_name": "genealogy",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I have a GEDCOM file at test-fixtures/family.ged — can you tell me about Dennis's family? Like who are his parents, his wife, kids?",
+      "expected_output": "Natural language summary covering: parents Roderick (Rod) and Estelle Varnell, wife Lorraine (Lori, nee Decker), children Clay, Nora, and Jude. Should mention key details like dates and places in a readable way.",
+      "files": ["test-fixtures/family.ged"]
+    },
+    {
+      "id": 2,
+      "prompt": "Looking at test-fixtures/family.ged — how is Suki related to Clay? Can you trace the connection?",
+      "expected_output": "Should explain that Suki is Clay's first cousin once removed or similar — Suki was adopted by Faye Decker, who is Lorraine's sister, making Suki a cousin to Clay. The explanation should be in natural language and trace the path clearly.",
+      "files": ["test-fixtures/family.ged"]
+    },
+    {
+      "id": 3,
+      "prompt": "Can you give me a summary of everyone in test-fixtures/family.ged? Maybe a nice table with names, birth dates, and how they fit into the family?",
+      "expected_output": "A markdown table listing all 14 individuals with columns for name, birth date, birth place, and family role/relationship. Should be well-formatted and scannable.",
+      "files": ["test-fixtures/family.ged"]
+    },
+    {
+      "id": 4,
+      "prompt": "What do we know about Malcolm Caine from test-fixtures/family.ged? How does he connect to the Varnell family?",
+      "expected_output": "Should explain that Malcolm (Mal) Caine is Dennis's half-brother — they share the same father (Roderick Varnell) but different mothers. Should mention he was born around 1957 in Dunmore and was a former owner of Caine Woodworks.",
+      "files": ["test-fixtures/family.ged"]
+    },
+    {
+      "id": 5,
+      "prompt": "I'm looking at test-fixtures/family.ged. Who are the Decker sisters and what do we know about them?",
+      "expected_output": "Should identify Lorraine, Greta, and Faye as the three Decker sisters, daughters of Warren and Opal Decker. Should mention Greta and Faye are twins, both work as postal clerks, and Faye adopted Suki. Lorraine married Dennis Varnell.",
+      "files": ["test-fixtures/family.ged"]
+    }
+  ]
+}
