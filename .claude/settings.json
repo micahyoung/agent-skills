@@ -5,8 +5,18 @@
   "permissions": {
     "allow": [
       "Bash(uv run *)",
+      "Bash(python*)",
+      "Bash(mkdir *)",
+      "Bash(cp *)",
+      "Bash(rm *)",
       "Bash(cat *)",
-      "Write(genealogy-workspace/*)"
+      "Bash(docker *)",
+      "Bash(grep *)",
+      "Bash(diff *)",
+      "Bash(wc *)",
+      "Write(genealogy-workspace/*)",
+      "Write(skills/genealogy/*)",
+      "Read(*)"
     ]
   }
 }
