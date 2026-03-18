@@ -30,6 +30,24 @@
       "prompt": "I'm looking at test-fixtures/family.ged. Who are the Decker sisters and what do we know about them?",
       "expected_output": "Should identify Lorraine, Greta, and Faye as the three Decker sisters, daughters of Warren and Opal Decker. Should mention Greta and Faye are twins, both work as postal clerks, and Faye adopted Suki. Lorraine married Dennis Varnell.",
       "files": ["test-fixtures/family.ged"]
+    },
+    {
+      "id": 6,
+      "prompt": "In test-fixtures/family.ged, Clay's occupation is listed as 'Student, Millhaven Middle School' but he's 41. Update it to 'Foreman, Millhaven Grain Processing', source: per family member correction March 2026.",
+      "expected_output": "Should switch to Edit Mode. Preview the change (old occupation -> new occupation for Clay / Clayton Rufus Varnell), ask for confirmation, then apply the edit. The modified file should have: updated OCCU field, a 1 NOTE [CHANGELOG] entry on the record with date and source, and an incremented VERS in the HEAD section. Should re-parse as sanity check.",
+      "files": ["test-fixtures/family.ged"]
+    },
+    {
+      "id": 7,
+      "prompt": "Generate a PDF pedigree chart of Dennis's ancestors from test-fixtures/family.ged.",
+      "expected_output": "Should switch to Report Mode. Use a Read Mode script to identify Dennis, then run gramps_report.py --list-people to get the Gramps-assigned ID for Dennis. Then run gramps_report.py with -r ancestor_chart -f pdf using that Gramps ID as --pid. Should produce a PDF file and report its path and size.",
+      "files": ["test-fixtures/family.ged"]
+    },
+    {
+      "id": 8,
+      "prompt": "I'd like to see Clay's family tree — who are his ancestors going back as far as the file goes?",
+      "expected_output": "Should stay in Read Mode and provide a natural language answer tracing Clay's ancestry: parents Dennis and Lorraine, paternal grandparents Roderick (Rod) and Estelle Varnell, maternal grandparents Warren and Opal Decker, and any further generations available. Should offer to generate a visual chart (pedigree/ancestor chart) if the user wants one.",
+      "files": ["test-fixtures/family.ged"]
     }
   ]
 }

@@ -1,24 +1,39 @@
 ---
 name: genealogy
 description: >
-  Parse, explore, and edit GEDCOM (.ged) genealogy files. Use this skill whenever the user
-  mentions a .ged file, GEDCOM data, family trees, ancestry, genealogy research, lineage,
-  ancestors, descendants, pedigree charts, or wants to look up relatives, trace family
-  connections, or correct/update genealogical records. Also trigger when the user has a .ged
-  file open or referenced in conversation and asks questions about people, families, dates,
-  or relationships — even if they don't say "genealogy" explicitly.
-compatibility: Requires uv. Uses Bash, Read, and Write tools.
+  Parse, explore, edit, and generate visual reports from GEDCOM (.ged) genealogy files. Use this skill whenever the user mentions a .ged file, GEDCOM data, family trees, ancestry, genealogy research, lineage, ancestors, descendants, pedigree charts, family history, heritage, great-grandparents, or wants to look up relatives, trace family connections, find out "who were my relatives", or correct/update genealogical records. Also trigger when the user has a .ged file open or referenced in conversation and asks questions about people, families, dates, or relationships — even if they don't say "genealogy" explicitly. Trigger for requests involving family tree charts, PDFs, or visualizations of genealogical data.
+compatibility: Requires uv. Report Mode requires Docker. Uses Bash, Read, and Write tools.
 ---
 
 # Genealogy Skill
 
-You help users explore and edit GEDCOM 5.5 genealogy files. You have two modes: **Read Mode** (default) and **Edit Mode**. Always start in Read Mode unless the user explicitly asks to make changes.
+You help users explore and edit GEDCOM 5.5 genealogy files. You have three modes:
+- **Read Mode** (default)
+- **Edit Mode**
+- **Report Mode**
+
+Always start in Read Mode unless the user explicitly asks to visualize or to make changes.
 
 ## How You Work
 
-You accomplish tasks by writing and executing short Python scripts on the fly using the `python-gedcom` library via `uv run`. This lets you handle arbitrarily complex queries and edits against real GEDCOM data rather than trying to eyeball the raw file.
+### Reading/Editing using python-gedcom in on-the-fly scripts
+
+You accomplish most tasks by writing and executing short Python scripts on the fly using the `python-gedcom` library via `uv run`. This lets you handle arbitrarily complex queries and edits against real GEDCOM data rather than trying to eyeball the raw file.
 
 Always run scripts with `uv run --with python-gedcom python ...` — this handles dependency installation automatically with no separate install step needed.
+
+### Reporting with GRAMPS script
+
+Specifically for generating reports, there is [./scripts/gramps_report.py](./scripts/gramps_report.py) which uses the `gramps` library to create any report supported by the application through the CLI interface. Call `./scripts/gramps_report.py --help` for usage details. Note: the script path is relative to this SKILL.md's directory — use `<skill-dir>/scripts/gramps_report.py` when constructing commands.
+
+## Finding the GEDCOM File
+
+If the user hasn't specified a file path:
+
+1. **Glob for `**/*.ged`** in the working directory
+2. **One file found** → use it, but confirm with the user: "I found `path/to/file.ged` — shall I use that?"
+3. **Multiple files found** → list them and ask which one to use
+4. **No files found** → ask the user for the path to their GEDCOM file
 
 ## Read Mode (default)
 
@@ -136,33 +151,131 @@ Editing genealogical records is serious business. A wrong edit can propagate con
 For edits, you'll typically need to work at a lower level — reading the file, modifying the element tree, and writing back. Here's the general approach:
 
 ```python
-from gedcom.parser import Parser
-from gedcom.element.individual import IndividualElement
 import datetime
+from gedcom.parser import Parser
 
-parser = Parser()
-parser.parse_file("path/to/file.ged")
+filepath = "path/to/file.ged"
+target_xref = "@I5@"
 
-elements = parser.get_element_dictionary()
-root = parser.get_root_child_elements()
+# Read the file as lines for text-level editing
+with open(filepath, "r", encoding="utf-8") as f:
+    lines = f.readlines()
 
-# Find and modify the target individual
-target = elements.get("@I5@")
-if target and isinstance(target, IndividualElement):
-    # Modify the element as needed
-    # ... (specific edit logic here)
+today = datetime.date.today().isoformat()
+new_lines = []
+in_target = False
+found = False
 
-    # Add changelog note
-    today = datetime.date.today().isoformat()
-    # Add NOTE child element with changelog
-    pass
+for i, line in enumerate(lines):
+    stripped = line.strip()
 
-# Write the modified file
-# Note: python-gedcom's output may need manual assembly
-# for complex edits — write a helper that walks the element tree
+    # Detect when we enter/leave the target individual record
+    if stripped.startswith("0") and target_xref in stripped and "INDI" in stripped:
+        in_target = True
+    elif stripped.startswith("0") and in_target:
+        in_target = False
+
+    # Replace an OCCU field within the target individual
+    if in_target and stripped.startswith("1 OCCU"):
+        new_lines.append("1 OCCU Foreman, Millhaven Grain Processing\n")
+        new_lines.append(f"1 NOTE [CHANGELOG] {today}: Updated occupation from "
+                         f"'{stripped[7:]}' to 'Foreman, Millhaven Grain Processing' "
+                         f"(source: per family member correction)\n")
+        found = True
+        continue
+
+    # Increment VERS in the HEAD section
+    if stripped.startswith("2 VERS") and any(
+        l.strip().startswith("1 SOUR") for l in lines[max(0,i-5):i]
+    ):
+        parts = stripped.split()
+        if len(parts) == 3:
+            try:
+                major, minor = parts[2].split(".")
+                new_vers = f"{major}.{int(minor)+1}"
+                new_lines.append(f"2 VERS {new_vers}\n")
+                continue
+            except ValueError:
+                pass
+
+    new_lines.append(line)
+
+if found:
+    with open(filepath, "w", encoding="utf-8") as f:
+        f.writelines(new_lines)
+    # Sanity check: re-parse to ensure the file is still valid
+    parser = Parser()
+    parser.parse_file(filepath)
+    print("Edit applied and file re-parsed successfully.")
+else:
+    print(f"Warning: OCCU field not found for {target_xref}")
 ```
 
-Because `python-gedcom`'s write support can be limited for complex structural edits, you may sometimes need to read the .ged as text, make targeted string-level edits, and write it back — that's fine as long as you validate the result still parses correctly. Always re-parse the output file as a sanity check after writing.
+This text-level approach gives full control over field edits, changelog notes, and version incrementing. Always re-parse the output file as a sanity check after writing.
+
+## Report Mode
+
+Switch to this mode when the user wants a visual report — a pedigree chart, relationship graph, fan chart, descendant tree, or any other graphical output from their GEDCOM data. Report Mode uses the bundled `scripts/gramps_report.py` script, which runs Gramps inside Docker to produce publication-quality reports.
+
+### When to use Report Mode
+
+Trigger Report Mode when the user asks for something visual or printable:
+- "Draw me a family tree", "Show me a pedigree chart"
+- "Generate a relationship graph for everyone descended from Warren"
+- "I need a fan chart of Clay's ancestors"
+- "Export a PDF of the descendant tree"
+- "Create a timeline chart for Estelle"
+
+If the user asks for an ASCII chart or text-based tree, stay in Read Mode and generate it with a Python script instead. Report Mode is specifically for graphical output (PDF, PNG, SVG, DOT).
+
+### Prerequisites
+
+- **Docker must be running**. The script pulls `ghcr.io/gramps-project/grampsweb:latest`. If Docker isn't available, tell the user and suggest they start it.
+- The output file must be in the **same directory** as the input GEDCOM file.
+
+### The Report Workflow
+
+1. **Identify the center person**. Most reports require a Gramps `pid`. Gramps assigns its own internal IDs during import, which may differ from the GEDCOM `@XREF@` identifiers. To get the correct Gramps ID:
+   1. First, find the person's name using a Read Mode python-gedcom script (to confirm you have the right individual).
+   2. Then run `python <skill-dir>/scripts/gramps_report.py --list-people -i file.ged` to see Gramps-assigned IDs alongside names.
+   3. Match by name and use that Gramps ID as the `--pid` value.
+
+2. **Choose the report type and format**. Match the user's request to one of the available reports:
+   - `rel_graph` — Relationship Graph (full or filtered network)
+   - `ancestor_chart` — Pedigree / Ancestor Tree
+   - `descend_chart` — Descendant Tree
+   - `family_descend_chart` — Descendant Tree including spouses
+   - `fan_chart` — Circular ancestor chart
+   - `hourglass_graph` — Ancestors above, descendants below
+   - `timeline` — Chronological life events
+   - `indiv_complete` — Complete Individual Report
+   - `kinship_report` — Everyone related to center person
+   - `family_group` — Single family unit detail sheet
+
+   See `scripts/gramps_report.py --help` for the full list and available options.
+
+3. **Run the script**:
+   ```bash
+   python <skill-dir>/scripts/gramps_report.py \
+     -i path/to/family.ged \
+     -o path/to/output.pdf \
+     -f pdf \
+     -r rel_graph \
+     -p I123 \
+     -e "filter=2,dpi=300"
+   ```
+   *(Replace `<skill-dir>` with the actual path to this skill's directory.)*
+
+4. **Report the result**. Tell the user what was generated, the file path, and file size. If the format is viewable (PNG, SVG), offer to open or display it.
+
+### Tips for good reports
+
+- **PDF is the safest default** for output format — it embeds fonts and renders reliably.
+- **SVG** is great for web use but renders text as glyph paths (not searchable text).
+- **PNG** works well for sharing; use `-e "dpi=300"` for print quality.
+- **DOT** format is useful when the user wants to customize the graph layout further with Graphviz.
+- For large trees, **use filters** to avoid overwhelming graphs. `filter=1` (descendants) or `filter=3` (ancestors) keeps things focused. `filter=0` includes the entire database.
+- Use `-e "maxgen=N"` on ancestor/descendant charts to limit depth.
 
 ## Handling Errors Gracefully
 
