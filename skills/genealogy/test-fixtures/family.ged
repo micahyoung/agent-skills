@@ -209,4 +209,1704 @@
 1 WIFE @I11@
 1 CHIL @I12@
 1 NOTE Faye as single adoptive parent.
+0 @I15@ INDI
+1 NAME Phillip /Rodriguez/
+2 GIVN Phillip
+2 SURN Rodriguez
+1 SEX M
+1 BIRT
+2 DATE 06 JUN 1970
+2 PLCE Jacobport, NP
+1 FAMS @F6@
+0 @I16@ INDI
+1 NAME Shelly /Moore/
+2 GIVN Shelly
+2 SURN Moore
+1 SEX F
+1 BIRT
+2 DATE 05 JUN 1975
+2 PLCE Jacobport, NP
+1 FAMS @F6@
+0 @I17@ INDI
+1 NAME Daniel /Rodriguez/
+2 GIVN Daniel
+2 SURN Rodriguez
+1 SEX M
+1 BIRT
+2 DATE 14 FEB 2012
+2 PLCE Jacobport, NP
+1 FAMC @F6@
+0 @F6@ FAM
+1 HUSB @I15@
+1 WIFE @I16@
+1 CHIL @I17@
+1 MARR
+2 DATE 21 JUN 2001
+2 PLCE Jacobport, NP
+0 @I18@ INDI
+1 NAME William /Weiss/
+2 GIVN William
+2 SURN Weiss
+1 SEX M
+1 BIRT
+2 DATE 23 AUG 1970
+2 PLCE Michaelville, RU
+1 FAMS @F7@
+0 @I19@ INDI
+1 NAME Heather /Bradshaw/
+2 GIVN Heather
+2 SURN Bradshaw
+1 SEX F
+1 BIRT
+2 DATE 23 AUG 1969
+2 PLCE Michaelville, RU
+1 FAMS @F7@
+0 @I20@ INDI
+1 NAME Laura /Weiss/
+2 GIVN Laura
+2 SURN Weiss
+1 SEX M
+1 BIRT
+2 DATE 18 MAR 2007
+2 PLCE Michaelville, RU
+1 FAMC @F7@
+0 @F7@ FAM
+1 HUSB @I18@
+1 WIFE @I19@
+1 CHIL @I20@
+1 MARR
+2 DATE 21 SEP 1993
+2 PLCE Michaelville, RU
+0 @I21@ INDI
+1 NAME Jorge /Petty/
+2 GIVN Jorge
+2 SURN Petty
+1 SEX M
+1 BIRT
+2 DATE 30 AUG 1981
+2 PLCE New Michaelfurt, NG
+1 FAMS @F8@
+0 @I22@ INDI
+1 NAME Laurie /Reeves/
+2 GIVN Laurie
+2 SURN Reeves
+1 SEX F
+1 BIRT
+2 DATE 31 AUG 1977
+2 PLCE New Michaelfurt, NG
+1 FAMS @F8@
+0 @I23@ INDI
+1 NAME Jacob /Petty/
+2 GIVN Jacob
+2 SURN Petty
+1 SEX F
+1 BIRT
+2 DATE 26 DEC 2010
+2 PLCE New Michaelfurt, NG
+1 FAMC @F8@
+0 @F8@ FAM
+1 HUSB @I21@
+1 WIFE @I22@
+1 CHIL @I23@
+1 MARR
+2 DATE 13 DEC 2009
+2 PLCE New Michaelfurt, NG
+0 @I24@ INDI
+1 NAME David /Montgomery/
+2 GIVN David
+2 SURN Montgomery
+1 SEX M
+1 BIRT
+2 DATE 27 NOV 1969
+2 PLCE Davismouth, GY
+1 FAMS @F9@
+0 @I25@ INDI
+1 NAME Alexandra /Knight/
+2 GIVN Alexandra
+2 SURN Knight
+1 SEX F
+1 BIRT
+2 DATE 27 NOV 1969
+2 PLCE Davismouth, GY
+1 FAMS @F9@
+0 @I26@ INDI
+1 NAME Mary /Montgomery/
+2 GIVN Mary
+2 SURN Montgomery
+1 SEX F
+1 BIRT
+2 DATE 29 MAR 2006
+2 PLCE Davismouth, GY
+1 FAMC @F9@
+0 @F9@ FAM
+1 HUSB @I24@
+1 WIFE @I25@
+1 CHIL @I26@
+1 MARR
+2 DATE 07 FEB 2001
+2 PLCE Davismouth, GY
+0 @I27@ INDI
+1 NAME Gary /Newton/
+2 GIVN Gary
+2 SURN Newton
+1 SEX M
+1 BIRT
+2 DATE 19 APR 1982
+2 PLCE Alexandertown, TO
+1 FAMS @F10@
+0 @I28@ INDI
+1 NAME Yvette /Green/
+2 GIVN Yvette
+2 SURN Green
+1 SEX F
+1 BIRT
+2 DATE 19 APR 1980
+2 PLCE Alexandertown, TO
+1 FAMS @F10@
+0 @I29@ INDI
+1 NAME Bradley /Newton/
+2 GIVN Bradley
+2 SURN Newton
+1 SEX F
+1 BIRT
+2 DATE 02 FEB 2021
+2 PLCE Alexandertown, TO
+1 FAMC @F10@
+0 @F10@ FAM
+1 HUSB @I27@
+1 WIFE @I28@
+1 CHIL @I29@
+1 MARR
+2 DATE 12 JUL 2018
+2 PLCE Alexandertown, TO
+0 @I30@ INDI
+1 NAME Jermaine /Johnson/
+2 GIVN Jermaine
+2 SURN Johnson
+1 SEX M
+1 BIRT
+2 DATE 27 APR 1973
+2 PLCE Wayneburgh, BO
+1 FAMS @F11@
+0 @I31@ INDI
+1 NAME Ashley /Mcclain/
+2 GIVN Ashley
+2 SURN Mcclain
+1 SEX F
+1 BIRT
+2 DATE 27 APR 1974
+2 PLCE Wayneburgh, BO
+1 FAMS @F11@
+0 @I32@ INDI
+1 NAME Samuel /Johnson/
+2 GIVN Samuel
+2 SURN Johnson
+1 SEX F
+1 BIRT
+2 DATE 06 MAR 2017
+2 PLCE Wayneburgh, BO
+1 FAMC @F11@
+0 @F11@ FAM
+1 HUSB @I30@
+1 WIFE @I31@
+1 CHIL @I32@
+1 MARR
+2 DATE 01 APR 2003
+2 PLCE Wayneburgh, BO
+0 @I33@ INDI
+1 NAME Steven /Adams/
+2 GIVN Steven
+2 SURN Adams
+1 SEX M
+1 BIRT
+2 DATE 24 JAN 1980
+2 PLCE West Christina, MU
+1 FAMS @F12@
+0 @I34@ INDI
+1 NAME Teresa Burgess /MD/
+2 GIVN Teresa Burgess
+2 SURN MD
+1 SEX F
+1 BIRT
+2 DATE 22 JAN 1985
+2 PLCE West Christina, MU
+1 FAMS @F12@
+0 @I35@ INDI
+1 NAME Caitlin /Adams/
+2 GIVN Caitlin
+2 SURN Adams
+1 SEX M
+1 BIRT
+2 DATE 12 DEC 2019
+2 PLCE West Christina, MU
+1 FAMC @F12@
+0 @F12@ FAM
+1 HUSB @I33@
+1 WIFE @I34@
+1 CHIL @I35@
+1 MARR
+2 DATE 27 APR 2009
+2 PLCE West Christina, MU
+0 @I36@ INDI
+1 NAME Thomas /Lee/
+2 GIVN Thomas
+2 SURN Lee
+1 SEX M
+1 BIRT
+2 DATE 03 JAN 1978
+2 PLCE Port Tiffanyland, TG
+1 FAMS @F13@
+0 @I37@ INDI
+1 NAME Bianca /Bennett/
+2 GIVN Bianca
+2 SURN Bennett
+1 SEX F
+1 BIRT
+2 DATE 03 JAN 1980
+2 PLCE Port Tiffanyland, TG
+1 FAMS @F13@
+0 @I38@ INDI
+1 NAME Jason /Lee/
+2 GIVN Jason
+2 SURN Lee
+1 SEX F
+1 BIRT
+2 DATE 01 OCT 2017
+2 PLCE Port Tiffanyland, TG
+1 FAMC @F13@
+0 @F13@ FAM
+1 HUSB @I36@
+1 WIFE @I37@
+1 CHIL @I38@
+1 MARR
+2 DATE 17 APR 2004
+2 PLCE Port Tiffanyland, TG
+0 @I39@ INDI
+1 NAME Eric /Galvan/
+2 GIVN Eric
+2 SURN Galvan
+1 SEX M
+1 BIRT
+2 DATE 01 JUN 1967
+2 PLCE New Yolandatown, BR
+1 FAMS @F14@
+0 @I40@ INDI
+1 NAME Madison /Delacruz/
+2 GIVN Madison
+2 SURN Delacruz
+1 SEX F
+1 BIRT
+2 DATE 02 JUN 1962
+2 PLCE New Yolandatown, BR
+1 FAMS @F14@
+0 @I41@ INDI
+1 NAME Jason /Galvan/
+2 GIVN Jason
+2 SURN Galvan
+1 SEX F
+1 BIRT
+2 DATE 27 FEB 2009
+2 PLCE New Yolandatown, BR
+1 FAMC @F14@
+0 @F14@ FAM
+1 HUSB @I39@
+1 WIFE @I40@
+1 CHIL @I41@
+1 MARR
+2 DATE 16 OCT 1999
+2 PLCE New Yolandatown, BR
+0 @I42@ INDI
+1 NAME Andrew /Preston/
+2 GIVN Andrew
+2 SURN Preston
+1 SEX M
+1 BIRT
+2 DATE 25 JUN 1974
+2 PLCE Sparksbury, IR
+1 FAMS @F15@
+0 @I43@ INDI
+1 NAME Sydney /Mcgrath/
+2 GIVN Sydney
+2 SURN Mcgrath
+1 SEX F
+1 BIRT
+2 DATE 26 JUN 1969
+2 PLCE Sparksbury, IR
+1 FAMS @F15@
+0 @I44@ INDI
+1 NAME Kendra /Preston/
+2 GIVN Kendra
+2 SURN Preston
+1 SEX F
+1 BIRT
+2 DATE 19 MAR 2017
+2 PLCE Sparksbury, IR
+1 FAMC @F15@
+0 @F15@ FAM
+1 HUSB @I42@
+1 WIFE @I43@
+1 CHIL @I44@
+1 MARR
+2 DATE 02 MAY 2008
+2 PLCE Sparksbury, IR
+0 @I45@ INDI
+1 NAME Jesse /Spencer/
+2 GIVN Jesse
+2 SURN Spencer
+1 SEX M
+1 BIRT
+2 DATE 20 JAN 1986
+2 PLCE Powellchester, HN
+1 FAMS @F16@
+0 @I46@ INDI
+1 NAME Dana /Romero/
+2 GIVN Dana
+2 SURN Romero
+1 SEX F
+1 BIRT
+2 DATE 19 JAN 1990
+2 PLCE Powellchester, HN
+1 FAMS @F16@
+0 @I47@ INDI
+1 NAME Barbara /Spencer/
+2 GIVN Barbara
+2 SURN Spencer
+1 SEX M
+1 BIRT
+2 DATE 17 NOV 2025
+2 PLCE Powellchester, HN
+1 FAMC @F16@
+0 @F16@ FAM
+1 HUSB @I45@
+1 WIFE @I46@
+1 CHIL @I47@
+1 MARR
+2 DATE 19 NOV 2019
+2 PLCE Powellchester, HN
+0 @I48@ INDI
+1 NAME Miguel /Davila/
+2 GIVN Miguel
+2 SURN Davila
+1 SEX M
+1 BIRT
+2 DATE 14 NOV 1975
+2 PLCE New Justinchester, MN
+1 FAMS @F17@
+0 @I49@ INDI
+1 NAME Jennifer /Ball/
+2 GIVN Jennifer
+2 SURN Ball
+1 SEX F
+1 BIRT
+2 DATE 12 NOV 1980
+2 PLCE New Justinchester, MN
+1 FAMS @F17@
+0 @I50@ INDI
+1 NAME Robert /Davila/
+2 GIVN Robert
+2 SURN Davila
+1 SEX F
+1 BIRT
+2 DATE 16 APR 2005
+2 PLCE New Justinchester, MN
+1 FAMC @F17@
+0 @F17@ FAM
+1 HUSB @I48@
+1 WIFE @I49@
+1 CHIL @I50@
+1 MARR
+2 DATE 30 AUG 2003
+2 PLCE New Justinchester, MN
+0 @I51@ INDI
+1 NAME Michael /Hanna/
+2 GIVN Michael
+2 SURN Hanna
+1 SEX M
+1 BIRT
+2 DATE 28 AUG 1983
+2 PLCE Annport, KE
+1 FAMS @F18@
+0 @I52@ INDI
+1 NAME Alyssa /Parker/
+2 GIVN Alyssa
+2 SURN Parker
+1 SEX F
+1 BIRT
+2 DATE 28 AUG 1981
+2 PLCE Annport, KE
+1 FAMS @F18@
+0 @I53@ INDI
+1 NAME Debra /Hanna/
+2 GIVN Debra
+2 SURN Hanna
+1 SEX F
+1 BIRT
+2 DATE 22 AUG 2025
+2 PLCE Annport, KE
+1 FAMC @F18@
+0 @F18@ FAM
+1 HUSB @I51@
+1 WIFE @I52@
+1 CHIL @I53@
+1 MARR
+2 DATE 05 APR 2020
+2 PLCE Annport, KE
+0 @I54@ INDI
+1 NAME Matthew /Fisher/
+2 GIVN Matthew
+2 SURN Fisher
+1 SEX M
+1 BIRT
+2 DATE 19 MAR 1985
+2 PLCE Lake Steven, CA
+1 FAMS @F19@
+0 @I55@ INDI
+1 NAME Kelly /Byrd/
+2 GIVN Kelly
+2 SURN Byrd
+1 SEX F
+1 BIRT
+2 DATE 19 MAR 1987
+2 PLCE Lake Steven, CA
+1 FAMS @F19@
+0 @I56@ INDI
+1 NAME Eric /Fisher/
+2 GIVN Eric
+2 SURN Fisher
+1 SEX M
+1 BIRT
+2 DATE 20 SEP 2024
+2 PLCE Lake Steven, CA
+1 FAMC @F19@
+0 @F19@ FAM
+1 HUSB @I54@
+1 WIFE @I55@
+1 CHIL @I56@
+1 MARR
+2 DATE 11 AUG 2018
+2 PLCE Lake Steven, CA
+0 @I57@ INDI
+1 NAME Adam /Brock/
+2 GIVN Adam
+2 SURN Brock
+1 SEX M
+1 BIRT
+2 DATE 09 OCT 1969
+2 PLCE South Chad, GA
+1 FAMS @F20@
+0 @I58@ INDI
+1 NAME Cindy /Dillon/
+2 GIVN Cindy
+2 SURN Dillon
+1 SEX F
+1 BIRT
+2 DATE 08 OCT 1973
+2 PLCE South Chad, GA
+1 FAMS @F20@
+0 @I59@ INDI
+1 NAME Cameron /Brock/
+2 GIVN Cameron
+2 SURN Brock
+1 SEX M
+1 BIRT
+2 DATE 27 FEB 2012
+2 PLCE South Chad, GA
+1 FAMC @F20@
+0 @F20@ FAM
+1 HUSB @I57@
+1 WIFE @I58@
+1 CHIL @I59@
+1 MARR
+2 DATE 25 AUG 1997
+2 PLCE South Chad, GA
+0 @I60@ INDI
+1 NAME Joshua /Edwards/
+2 GIVN Joshua
+2 SURN Edwards
+1 SEX M
+1 BIRT
+2 DATE 30 JUN 1973
+2 PLCE Vegaside, NP
+1 FAMS @F21@
+0 @I61@ INDI
+1 NAME Danielle /Edwards/
+2 GIVN Danielle
+2 SURN Edwards
+1 SEX F
+1 BIRT
+2 DATE 30 JUN 1974
+2 PLCE Vegaside, NP
+1 FAMS @F21@
+0 @I62@ INDI
+1 NAME Paul /Edwards/
+2 GIVN Paul
+2 SURN Edwards
+1 SEX M
+1 BIRT
+2 DATE 16 FEB 2011
+2 PLCE Vegaside, NP
+1 FAMC @F21@
+0 @F21@ FAM
+1 HUSB @I60@
+1 WIFE @I61@
+1 CHIL @I62@
+1 MARR
+2 DATE 13 AUG 2004
+2 PLCE Vegaside, NP
+0 @I63@ INDI
+1 NAME James /Cannon/
+2 GIVN James
+2 SURN Cannon
+1 SEX M
+1 BIRT
+2 DATE 29 JAN 1975
+2 PLCE New Alexandrafurt, ZW
+1 FAMS @F22@
+0 @I64@ INDI
+1 NAME Charlene /Michael/
+2 GIVN Charlene
+2 SURN Michael
+1 SEX F
+1 BIRT
+2 DATE 29 JAN 1976
+2 PLCE New Alexandrafurt, ZW
+1 FAMS @F22@
+0 @I65@ INDI
+1 NAME Joseph /Cannon/
+2 GIVN Joseph
+2 SURN Cannon
+1 SEX F
+1 BIRT
+2 DATE 21 MAR 2014
+2 PLCE New Alexandrafurt, ZW
+1 FAMC @F22@
+0 @F22@ FAM
+1 HUSB @I63@
+1 WIFE @I64@
+1 CHIL @I65@
+1 MARR
+2 DATE 14 OCT 2005
+2 PLCE New Alexandrafurt, ZW
+0 @I66@ INDI
+1 NAME John /Mayer/
+2 GIVN John
+2 SURN Mayer
+1 SEX M
+1 BIRT
+2 DATE 28 MAY 1983
+2 PLCE Lake Vanessamouth, DE
+1 FAMS @F23@
+0 @I67@ INDI
+1 NAME Stephanie /Garcia/
+2 GIVN Stephanie
+2 SURN Garcia
+1 SEX F
+1 BIRT
+2 DATE 28 MAY 1983
+2 PLCE Lake Vanessamouth, DE
+1 FAMS @F23@
+0 @I68@ INDI
+1 NAME Johnny /Mayer/
+2 GIVN Johnny
+2 SURN Mayer
+1 SEX M
+1 BIRT
+2 DATE 31 DEC 2017
+2 PLCE Lake Vanessamouth, DE
+1 FAMC @F23@
+0 @F23@ FAM
+1 HUSB @I66@
+1 WIFE @I67@
+1 CHIL @I68@
+1 MARR
+2 DATE 02 JUN 2015
+2 PLCE Lake Vanessamouth, DE
+0 @I69@ INDI
+1 NAME Keith /Wilkins/
+2 GIVN Keith
+2 SURN Wilkins
+1 SEX M
+1 BIRT
+2 DATE 25 JUN 1971
+2 PLCE Danielburgh, LT
+1 FAMS @F24@
+0 @I70@ INDI
+1 NAME Susan /Robinson/
+2 GIVN Susan
+2 SURN Robinson
+1 SEX F
+1 BIRT
+2 DATE 24 JUN 1972
+2 PLCE Danielburgh, LT
+1 FAMS @F24@
+0 @I71@ INDI
+1 NAME Victoria /Wilkins/
+2 GIVN Victoria
+2 SURN Wilkins
+1 SEX M
+1 BIRT
+2 DATE 23 MAR 2007
+2 PLCE Danielburgh, LT
+1 FAMC @F24@
+0 @F24@ FAM
+1 HUSB @I69@
+1 WIFE @I70@
+1 CHIL @I71@
+1 MARR
+2 DATE 22 APR 1998
+2 PLCE Danielburgh, LT
+0 @I72@ INDI
+1 NAME Tracy /Wheeler/
+2 GIVN Tracy
+2 SURN Wheeler
+1 SEX M
+1 BIRT
+2 DATE 05 NOV 1978
+2 PLCE Deanburgh, CR
+1 FAMS @F25@
+0 @I73@ INDI
+1 NAME Dawn /Sexton/
+2 GIVN Dawn
+2 SURN Sexton
+1 SEX F
+1 BIRT
+2 DATE 04 NOV 1980
+2 PLCE Deanburgh, CR
+1 FAMS @F25@
+0 @I74@ INDI
+1 NAME Doris /Wheeler/
+2 GIVN Doris
+2 SURN Wheeler
+1 SEX M
+1 BIRT
+2 DATE 29 FEB 2016
+2 PLCE Deanburgh, CR
+1 FAMC @F25@
+0 @F25@ FAM
+1 HUSB @I72@
+1 WIFE @I73@
+1 CHIL @I74@
+1 MARR
+2 DATE 21 DEC 2007
+2 PLCE Deanburgh, CR
+0 @I75@ INDI
+1 NAME Nathan /Ryan/
+2 GIVN Nathan
+2 SURN Ryan
+1 SEX M
+1 BIRT
+2 DATE 16 OCT 1973
+2 PLCE Jacobsburgh, CF
+1 FAMS @F26@
+0 @I76@ INDI
+1 NAME Wendy /Martin/
+2 GIVN Wendy
+2 SURN Martin
+1 SEX F
+1 BIRT
+2 DATE 17 OCT 1970
+2 PLCE Jacobsburgh, CF
+1 FAMS @F26@
+0 @I77@ INDI
+1 NAME Eric /Ryan/
+2 GIVN Eric
+2 SURN Ryan
+1 SEX F
+1 BIRT
+2 DATE 25 NOV 2022
+2 PLCE Jacobsburgh, CF
+1 FAMC @F26@
+0 @F26@ FAM
+1 HUSB @I75@
+1 WIFE @I76@
+1 CHIL @I77@
+1 MARR
+2 DATE 08 MAR 2010
+2 PLCE Jacobsburgh, CF
+0 @I78@ INDI
+1 NAME Grant /Hudson/
+2 GIVN Grant
+2 SURN Hudson
+1 SEX M
+1 BIRT
+2 DATE 10 NOV 1981
+2 PLCE Robertport, MN
+1 FAMS @F27@
+0 @I79@ INDI
+1 NAME Mrs. Michelle /Lambert/
+2 GIVN Mrs. Michelle
+2 SURN Lambert
+1 SEX F
+1 BIRT
+2 DATE 10 NOV 1980
+2 PLCE Robertport, MN
+1 FAMS @F27@
+0 @I80@ INDI
+1 NAME Austin /Hudson/
+2 GIVN Austin
+2 SURN Hudson
+1 SEX F
+1 BIRT
+2 DATE 01 MAY 2020
+2 PLCE Robertport, MN
+1 FAMC @F27@
+0 @F27@ FAM
+1 HUSB @I78@
+1 WIFE @I79@
+1 CHIL @I80@
+1 MARR
+2 DATE 17 OCT 2005
+2 PLCE Robertport, MN
+0 @I81@ INDI
+1 NAME Matthew /Salazar/
+2 GIVN Matthew
+2 SURN Salazar
+1 SEX M
+1 BIRT
+2 DATE 30 SEP 1983
+2 PLCE Lake David, MG
+1 FAMS @F28@
+0 @I82@ INDI
+1 NAME Haley /Allen/
+2 GIVN Haley
+2 SURN Allen
+1 SEX F
+1 BIRT
+2 DATE 30 SEP 1982
+2 PLCE Lake David, MG
+1 FAMS @F28@
+0 @I83@ INDI
+1 NAME Emily /Salazar/
+2 GIVN Emily
+2 SURN Salazar
+1 SEX M
+1 BIRT
+2 DATE 06 OCT 2025
+2 PLCE Lake David, MG
+1 FAMC @F28@
+0 @F28@ FAM
+1 HUSB @I81@
+1 WIFE @I82@
+1 CHIL @I83@
+1 MARR
+2 DATE 06 AUG 2012
+2 PLCE Lake David, MG
+0 @I84@ INDI
+1 NAME Jason /Skinner/
+2 GIVN Jason
+2 SURN Skinner
+1 SEX M
+1 BIRT
+2 DATE 07 JUL 1968
+2 PLCE South Keith, SG
+1 FAMS @F29@
+0 @I85@ INDI
+1 NAME Chelsea /Murphy/
+2 GIVN Chelsea
+2 SURN Murphy
+1 SEX F
+1 BIRT
+2 DATE 07 JUL 1968
+2 PLCE South Keith, SG
+1 FAMS @F29@
+0 @I86@ INDI
+1 NAME Michael /Skinner/
+2 GIVN Michael
+2 SURN Skinner
+1 SEX F
+1 BIRT
+2 DATE 31 MAY 1992
+2 PLCE South Keith, SG
+1 FAMC @F29@
+0 @F29@ FAM
+1 HUSB @I84@
+1 WIFE @I85@
+1 CHIL @I86@
+1 MARR
+2 DATE 25 FEB 1991
+2 PLCE South Keith, SG
+0 @I87@ INDI
+1 NAME Douglas /Roberts/
+2 GIVN Douglas
+2 SURN Roberts
+1 SEX M
+1 BIRT
+2 DATE 15 JAN 1967
+2 PLCE Josephberg, EE
+1 FAMS @F30@
+0 @I88@ INDI
+1 NAME Wendy /Hood/
+2 GIVN Wendy
+2 SURN Hood
+1 SEX F
+1 BIRT
+2 DATE 15 JAN 1968
+2 PLCE Josephberg, EE
+1 FAMS @F30@
+0 @I89@ INDI
+1 NAME Melissa /Roberts/
+2 GIVN Melissa
+2 SURN Roberts
+1 SEX F
+1 BIRT
+2 DATE 07 JAN 2009
+2 PLCE Josephberg, EE
+1 FAMC @F30@
+0 @F30@ FAM
+1 HUSB @I87@
+1 WIFE @I88@
+1 CHIL @I89@
+1 MARR
+2 DATE 23 OCT 1996
+2 PLCE Josephberg, EE
+0 @I90@ INDI
+1 NAME Brian /Gardner/
+2 GIVN Brian
+2 SURN Gardner
+1 SEX M
+1 BIRT
+2 DATE 18 JUL 1978
+2 PLCE Angelaborough, KP
+1 FAMS @F31@
+0 @I91@ INDI
+1 NAME Kimberly /Pittman/
+2 GIVN Kimberly
+2 SURN Pittman
+1 SEX F
+1 BIRT
+2 DATE 17 JUL 1981
+2 PLCE Angelaborough, KP
+1 FAMS @F31@
+0 @I92@ INDI
+1 NAME Isaiah /Gardner/
+2 GIVN Isaiah
+2 SURN Gardner
+1 SEX F
+1 BIRT
+2 DATE 03 NOV 2025
+2 PLCE Angelaborough, KP
+1 FAMC @F31@
+0 @F31@ FAM
+1 HUSB @I90@
+1 WIFE @I91@
+1 CHIL @I92@
+1 MARR
+2 DATE 06 NOV 2011
+2 PLCE Angelaborough, KP
+0 @I93@ INDI
+1 NAME Christopher /Jones/
+2 GIVN Christopher
+2 SURN Jones
+1 SEX M
+1 BIRT
+2 DATE 19 JUN 1978
+2 PLCE Allisonberg, IL
+1 FAMS @F32@
+0 @I94@ INDI
+1 NAME Jessica /Kim/
+2 GIVN Jessica
+2 SURN Kim
+1 SEX F
+1 BIRT
+2 DATE 19 JUN 1978
+2 PLCE Allisonberg, IL
+1 FAMS @F32@
+0 @I95@ INDI
+1 NAME Christopher /Jones/
+2 GIVN Christopher
+2 SURN Jones
+1 SEX F
+1 BIRT
+2 DATE 18 DEC 2010
+2 PLCE Allisonberg, IL
+1 FAMC @F32@
+0 @F32@ FAM
+1 HUSB @I93@
+1 WIFE @I94@
+1 CHIL @I95@
+1 MARR
+2 DATE 10 DEC 2005
+2 PLCE Allisonberg, IL
+0 @I96@ INDI
+1 NAME Ryan /Woods/
+2 GIVN Ryan
+2 SURN Woods
+1 SEX M
+1 BIRT
+2 DATE 12 OCT 1968
+2 PLCE Lake Russellburgh, SE
+1 FAMS @F33@
+0 @I97@ INDI
+1 NAME Rachel /Hinton/
+2 GIVN Rachel
+2 SURN Hinton
+1 SEX F
+1 BIRT
+2 DATE 11 OCT 1973
+2 PLCE Lake Russellburgh, SE
+1 FAMS @F33@
+0 @I98@ INDI
+1 NAME Andrew /Woods/
+2 GIVN Andrew
+2 SURN Woods
+1 SEX F
+1 BIRT
+2 DATE 30 JUL 2006
+2 PLCE Lake Russellburgh, SE
+1 FAMC @F33@
+0 @F33@ FAM
+1 HUSB @I96@
+1 WIFE @I97@
+1 CHIL @I98@
+1 MARR
+2 DATE 21 MAY 2005
+2 PLCE Lake Russellburgh, SE
+0 @I99@ INDI
+1 NAME David /Johnson/
+2 GIVN David
+2 SURN Johnson
+1 SEX M
+1 BIRT
+2 DATE 03 FEB 1972
+2 PLCE Riveraberg, AU
+1 FAMS @F34@
+0 @I100@ INDI
+1 NAME Dr. Ashley /Short/
+2 GIVN Dr. Ashley
+2 SURN Short
+1 SEX F
+1 BIRT
+2 DATE 03 FEB 1971
+2 PLCE Riveraberg, AU
+1 FAMS @F34@
+0 @I101@ INDI
+1 NAME Elizabeth /Johnson/
+2 GIVN Elizabeth
+2 SURN Johnson
+1 SEX M
+1 BIRT
+2 DATE 07 AUG 2014
+2 PLCE Riveraberg, AU
+1 FAMC @F34@
+0 @F34@ FAM
+1 HUSB @I99@
+1 WIFE @I100@
+1 CHIL @I101@
+1 MARR
+2 DATE 23 JAN 2006
+2 PLCE Riveraberg, AU
+0 @I102@ INDI
+1 NAME Jeffrey /Kim/
+2 GIVN Jeffrey
+2 SURN Kim
+1 SEX M
+1 BIRT
+2 DATE 12 NOV 1980
+2 PLCE Lake David, ZW
+1 FAMS @F35@
+0 @I103@ INDI
+1 NAME Samantha /Lewis/
+2 GIVN Samantha
+2 SURN Lewis
+1 SEX F
+1 BIRT
+2 DATE 12 NOV 1983
+2 PLCE Lake David, ZW
+1 FAMS @F35@
+0 @I104@ INDI
+1 NAME Eric /Kim/
+2 GIVN Eric
+2 SURN Kim
+1 SEX F
+1 BIRT
+2 DATE 27 OCT 2023
+2 PLCE Lake David, ZW
+1 FAMC @F35@
+0 @F35@ FAM
+1 HUSB @I102@
+1 WIFE @I103@
+1 CHIL @I104@
+1 MARR
+2 DATE 05 OCT 2012
+2 PLCE Lake David, ZW
+0 @I105@ INDI
+1 NAME Jesse /Lopez/
+2 GIVN Jesse
+2 SURN Lopez
+1 SEX M
+1 BIRT
+2 DATE 20 JAN 1971
+2 PLCE South Justinville, CH
+1 FAMS @F36@
+0 @I106@ INDI
+1 NAME Kimberly /Meyer/
+2 GIVN Kimberly
+2 SURN Meyer
+1 SEX F
+1 BIRT
+2 DATE 20 JAN 1972
+2 PLCE South Justinville, CH
+1 FAMS @F36@
+0 @I107@ INDI
+1 NAME Anna /Lopez/
+2 GIVN Anna
+2 SURN Lopez
+1 SEX M
+1 BIRT
+2 DATE 15 JUL 2016
+2 PLCE South Justinville, CH
+1 FAMC @F36@
+0 @F36@ FAM
+1 HUSB @I105@
+1 WIFE @I106@
+1 CHIL @I107@
+1 MARR
+2 DATE 05 APR 2008
+2 PLCE South Justinville, CH
+0 @I108@ INDI
+1 NAME Lee /Rodriguez/
+2 GIVN Lee
+2 SURN Rodriguez
+1 SEX M
+1 BIRT
+2 DATE 15 FEB 1982
+2 PLCE North Cherylhaven, MW
+1 FAMS @F37@
+0 @I109@ INDI
+1 NAME Margaret /Guzman/
+2 GIVN Margaret
+2 SURN Guzman
+1 SEX F
+1 BIRT
+2 DATE 14 FEB 1987
+2 PLCE North Cherylhaven, MW
+1 FAMS @F37@
+0 @I110@ INDI
+1 NAME Thomas /Rodriguez/
+2 GIVN Thomas
+2 SURN Rodriguez
+1 SEX M
+1 BIRT
+2 DATE 01 MAY 2025
+2 PLCE North Cherylhaven, MW
+1 FAMC @F37@
+0 @F37@ FAM
+1 HUSB @I108@
+1 WIFE @I109@
+1 CHIL @I110@
+1 MARR
+2 DATE 03 JAN 2024
+2 PLCE North Cherylhaven, MW
+0 @I111@ INDI
+1 NAME Timothy /Walters/
+2 GIVN Timothy
+2 SURN Walters
+1 SEX M
+1 BIRT
+2 DATE 05 OCT 1979
+2 PLCE Sarahland, DK
+1 FAMS @F38@
+0 @I112@ INDI
+1 NAME Sharon /Mendez/
+2 GIVN Sharon
+2 SURN Mendez
+1 SEX F
+1 BIRT
+2 DATE 05 OCT 1979
+2 PLCE Sarahland, DK
+1 FAMS @F38@
+0 @I113@ INDI
+1 NAME Timothy /Walters/
+2 GIVN Timothy
+2 SURN Walters
+1 SEX F
+1 BIRT
+2 DATE 18 JUL 2019
+2 PLCE Sarahland, DK
+1 FAMC @F38@
+0 @F38@ FAM
+1 HUSB @I111@
+1 WIFE @I112@
+1 CHIL @I113@
+1 MARR
+2 DATE 07 AUG 2012
+2 PLCE Sarahland, DK
+0 @I114@ INDI
+1 NAME Michael /Osborn/
+2 GIVN Michael
+2 SURN Osborn
+1 SEX M
+1 BIRT
+2 DATE 06 FEB 1970
+2 PLCE North Amyside, TN
+1 FAMS @F39@
+0 @I115@ INDI
+1 NAME Victoria /Smith/
+2 GIVN Victoria
+2 SURN Smith
+1 SEX F
+1 BIRT
+2 DATE 06 FEB 1970
+2 PLCE North Amyside, TN
+1 FAMS @F39@
+0 @I116@ INDI
+1 NAME Brandon /Osborn/
+2 GIVN Brandon
+2 SURN Osborn
+1 SEX M
+1 BIRT
+2 DATE 19 FEB 2007
+2 PLCE North Amyside, TN
+1 FAMC @F39@
+0 @F39@ FAM
+1 HUSB @I114@
+1 WIFE @I115@
+1 CHIL @I116@
+1 MARR
+2 DATE 08 JUL 2001
+2 PLCE North Amyside, TN
+0 @I117@ INDI
+1 NAME Robert /Garcia/
+2 GIVN Robert
+2 SURN Garcia
+1 SEX M
+1 BIRT
+2 DATE 23 JUL 1973
+2 PLCE Millerton, MU
+1 FAMS @F40@
+0 @I118@ INDI
+1 NAME Tiffany /Logan/
+2 GIVN Tiffany
+2 SURN Logan
+1 SEX F
+1 BIRT
+2 DATE 23 JUL 1973
+2 PLCE Millerton, MU
+1 FAMS @F40@
+0 @I119@ INDI
+1 NAME Angela /Garcia/
+2 GIVN Angela
+2 SURN Garcia
+1 SEX F
+1 BIRT
+2 DATE 08 OCT 2019
+2 PLCE Millerton, MU
+1 FAMC @F40@
+0 @F40@ FAM
+1 HUSB @I117@
+1 WIFE @I118@
+1 CHIL @I119@
+1 MARR
+2 DATE 05 MAY 2005
+2 PLCE Millerton, MU
+0 @I120@ INDI
+1 NAME Jonathan /Hill/
+2 GIVN Jonathan
+2 SURN Hill
+1 SEX M
+1 BIRT
+2 DATE 15 NOV 1976
+2 PLCE Lisaview, SY
+1 FAMS @F41@
+0 @I121@ INDI
+1 NAME Lisa /Jackson/
+2 GIVN Lisa
+2 SURN Jackson
+1 SEX F
+1 BIRT
+2 DATE 14 NOV 1980
+2 PLCE Lisaview, SY
+1 FAMS @F41@
+0 @I122@ INDI
+1 NAME Melissa /Hill/
+2 GIVN Melissa
+2 SURN Hill
+1 SEX M
+1 BIRT
+2 DATE 23 AUG 2024
+2 PLCE Lisaview, SY
+1 FAMC @F41@
+0 @F41@ FAM
+1 HUSB @I120@
+1 WIFE @I121@
+1 CHIL @I122@
+1 MARR
+2 DATE 02 AUG 2012
+2 PLCE Lisaview, SY
+0 @I123@ INDI
+1 NAME Christopher /Rodriguez/
+2 GIVN Christopher
+2 SURN Rodriguez
+1 SEX M
+1 BIRT
+2 DATE 18 APR 1981
+2 PLCE Martinezland, NI
+1 FAMS @F42@
+0 @I124@ INDI
+1 NAME Nicole /Blevins/
+2 GIVN Nicole
+2 SURN Blevins
+1 SEX F
+1 BIRT
+2 DATE 18 APR 1980
+2 PLCE Martinezland, NI
+1 FAMS @F42@
+0 @I125@ INDI
+1 NAME Kelsey /Rodriguez/
+2 GIVN Kelsey
+2 SURN Rodriguez
+1 SEX M
+1 BIRT
+2 DATE 30 APR 2009
+2 PLCE Martinezland, NI
+1 FAMC @F42@
+0 @F42@ FAM
+1 HUSB @I123@
+1 WIFE @I124@
+1 CHIL @I125@
+1 MARR
+2 DATE 11 AUG 2005
+2 PLCE Martinezland, NI
+0 @I126@ INDI
+1 NAME Carlos /Walker/
+2 GIVN Carlos
+2 SURN Walker
+1 SEX M
+1 BIRT
+2 DATE 24 APR 1967
+2 PLCE Ashleymouth, SN
+1 FAMS @F43@
+0 @I127@ INDI
+1 NAME Dana /Reed/
+2 GIVN Dana
+2 SURN Reed
+1 SEX F
+1 BIRT
+2 DATE 23 APR 1969
+2 PLCE Ashleymouth, SN
+1 FAMS @F43@
+0 @I128@ INDI
+1 NAME Patricia /Walker/
+2 GIVN Patricia
+2 SURN Walker
+1 SEX M
+1 BIRT
+2 DATE 18 DEC 2006
+2 PLCE Ashleymouth, SN
+1 FAMC @F43@
+0 @F43@ FAM
+1 HUSB @I126@
+1 WIFE @I127@
+1 CHIL @I128@
+1 MARR
+2 DATE 03 OCT 2002
+2 PLCE Ashleymouth, SN
+0 @I129@ INDI
+1 NAME Malik /Foster/
+2 GIVN Malik
+2 SURN Foster
+1 SEX M
+1 BIRT
+2 DATE 05 APR 1982
+2 PLCE Murphyview, GY
+1 FAMS @F44@
+0 @I130@ INDI
+1 NAME Christina /Miller/
+2 GIVN Christina
+2 SURN Miller
+1 SEX F
+1 BIRT
+2 DATE 05 APR 1981
+2 PLCE Murphyview, GY
+1 FAMS @F44@
+0 @I131@ INDI
+1 NAME Shaun /Foster/
+2 GIVN Shaun
+2 SURN Foster
+1 SEX M
+1 BIRT
+2 DATE 17 MAY 2015
+2 PLCE Murphyview, GY
+1 FAMC @F44@
+0 @F44@ FAM
+1 HUSB @I129@
+1 WIFE @I130@
+1 CHIL @I131@
+1 MARR
+2 DATE 02 AUG 2008
+2 PLCE Murphyview, GY
+0 @I132@ INDI
+1 NAME Jason /Garrison/
+2 GIVN Jason
+2 SURN Garrison
+1 SEX M
+1 BIRT
+2 DATE 25 OCT 1971
+2 PLCE Chelseafurt, MD
+1 FAMS @F45@
+0 @I133@ INDI
+1 NAME Tonya /Torres/
+2 GIVN Tonya
+2 SURN Torres
+1 SEX F
+1 BIRT
+2 DATE 25 OCT 1969
+2 PLCE Chelseafurt, MD
+1 FAMS @F45@
+0 @I134@ INDI
+1 NAME John /Garrison/
+2 GIVN John
+2 SURN Garrison
+1 SEX M
+1 BIRT
+2 DATE 16 APR 2004
+2 PLCE Chelseafurt, MD
+1 FAMC @F45@
+0 @F45@ FAM
+1 HUSB @I132@
+1 WIFE @I133@
+1 CHIL @I134@
+1 MARR
+2 DATE 17 MAR 2001
+2 PLCE Chelseafurt, MD
+0 @I135@ INDI
+1 NAME Joshua /Sanchez/
+2 GIVN Joshua
+2 SURN Sanchez
+1 SEX M
+1 BIRT
+2 DATE 11 AUG 1966
+2 PLCE New Jose, MU
+1 FAMS @F46@
+0 @I136@ INDI
+1 NAME Alice /Mcintosh/
+2 GIVN Alice
+2 SURN Mcintosh
+1 SEX F
+1 BIRT
+2 DATE 10 AUG 1968
+2 PLCE New Jose, MU
+1 FAMS @F46@
+0 @I137@ INDI
+1 NAME Lisa /Sanchez/
+2 GIVN Lisa
+2 SURN Sanchez
+1 SEX F
+1 BIRT
+2 DATE 28 OCT 2003
+2 PLCE New Jose, MU
+1 FAMC @F46@
+0 @F46@ FAM
+1 HUSB @I135@
+1 WIFE @I136@
+1 CHIL @I137@
+1 MARR
+2 DATE 06 JAN 2002
+2 PLCE New Jose, MU
+0 @I138@ INDI
+1 NAME James /Jones/
+2 GIVN James
+2 SURN Jones
+1 SEX M
+1 BIRT
+2 DATE 20 DEC 1974
+2 PLCE Stephaniehaven, GD
+1 FAMS @F47@
+0 @I139@ INDI
+1 NAME Dr. Andrea /Bowers/
+2 GIVN Dr. Andrea
+2 SURN Bowers
+1 SEX F
+1 BIRT
+2 DATE 20 DEC 1974
+2 PLCE Stephaniehaven, GD
+1 FAMS @F47@
+0 @I140@ INDI
+1 NAME Elizabeth /Jones/
+2 GIVN Elizabeth
+2 SURN Jones
+1 SEX M
+1 BIRT
+2 DATE 07 JAN 2005
+2 PLCE Stephaniehaven, GD
+1 FAMC @F47@
+0 @F47@ FAM
+1 HUSB @I138@
+1 WIFE @I139@
+1 CHIL @I140@
+1 MARR
+2 DATE 10 DEC 2000
+2 PLCE Stephaniehaven, GD
+0 @I141@ INDI
+1 NAME Jacob /York/
+2 GIVN Jacob
+2 SURN York
+1 SEX M
+1 BIRT
+2 DATE 28 APR 1968
+2 PLCE Parkerstad, PS
+1 FAMS @F48@
+0 @I142@ INDI
+1 NAME Stacey /Reid/
+2 GIVN Stacey
+2 SURN Reid
+1 SEX F
+1 BIRT
+2 DATE 27 APR 1973
+2 PLCE Parkerstad, PS
+1 FAMS @F48@
+0 @I143@ INDI
+1 NAME Tasha /York/
+2 GIVN Tasha
+2 SURN York
+1 SEX M
+1 BIRT
+2 DATE 10 OCT 2005
+2 PLCE Parkerstad, PS
+1 FAMC @F48@
+0 @F48@ FAM
+1 HUSB @I141@
+1 WIFE @I142@
+1 CHIL @I143@
+1 MARR
+2 DATE 11 JUN 2002
+2 PLCE Parkerstad, PS
+0 @I144@ INDI
+1 NAME Jim /Garza/
+2 GIVN Jim
+2 SURN Garza
+1 SEX M
+1 BIRT
+2 DATE 31 MAY 1966
+2 PLCE West Tiffanyhaven, KW
+1 FAMS @F49@
+0 @I145@ INDI
+1 NAME Stacey /Velasquez/
+2 GIVN Stacey
+2 SURN Velasquez
+1 SEX F
+1 BIRT
+2 DATE 31 MAY 1964
+2 PLCE West Tiffanyhaven, KW
+1 FAMS @F49@
+0 @I146@ INDI
+1 NAME Heather /Garza/
+2 GIVN Heather
+2 SURN Garza
+1 SEX M
+1 BIRT
+2 DATE 26 AUG 2013
+2 PLCE West Tiffanyhaven, KW
+1 FAMC @F49@
+0 @F49@ FAM
+1 HUSB @I144@
+1 WIFE @I145@
+1 CHIL @I146@
+1 MARR
+2 DATE 14 DEC 2000
+2 PLCE West Tiffanyhaven, KW
+0 @I147@ INDI
+1 NAME Robert /Trevino/
+2 GIVN Robert
+2 SURN Trevino
+1 SEX M
+1 BIRT
+2 DATE 21 JUN 1982
+2 PLCE Joannaside, NZ
+1 FAMS @F50@
+0 @I148@ INDI
+1 NAME Michelle /Mcdonald/
+2 GIVN Michelle
+2 SURN Mcdonald
+1 SEX F
+1 BIRT
+2 DATE 22 JUN 1979
+2 PLCE Joannaside, NZ
+1 FAMS @F50@
+0 @I149@ INDI
+1 NAME Kathryn /Trevino/
+2 GIVN Kathryn
+2 SURN Trevino
+1 SEX M
+1 BIRT
+2 DATE 07 JAN 2026
+2 PLCE Joannaside, NZ
+1 FAMC @F50@
+0 @F50@ FAM
+1 HUSB @I147@
+1 WIFE @I148@
+1 CHIL @I149@
+1 MARR
+2 DATE 14 JUL 2015
+2 PLCE Joannaside, NZ
+0 @I150@ INDI
+1 NAME Alexander /Thompson/
+2 GIVN Alexander
+2 SURN Thompson
+1 SEX M
+1 BIRT
+2 DATE 19 AUG 1966
+2 PLCE Port Bryanburgh, JM
+1 FAMS @F51@
+0 @I151@ INDI
+1 NAME Katherine /Bishop/
+2 GIVN Katherine
+2 SURN Bishop
+1 SEX F
+1 BIRT
+2 DATE 19 AUG 1965
+2 PLCE Port Bryanburgh, JM
+1 FAMS @F51@
+0 @I152@ INDI
+1 NAME David /Thompson/
+2 GIVN David
+2 SURN Thompson
+1 SEX F
+1 BIRT
+2 DATE 25 AUG 2002
+2 PLCE Port Bryanburgh, JM
+1 FAMC @F51@
+0 @F51@ FAM
+1 HUSB @I150@
+1 WIFE @I151@
+1 CHIL @I152@
+1 MARR
+2 DATE 17 OCT 1995
+2 PLCE Port Bryanburgh, JM
+0 @I153@ INDI
+1 NAME Jesse /Deleon/
+2 GIVN Jesse
+2 SURN Deleon
+1 SEX M
+1 BIRT
+2 DATE 17 SEP 1972
+2 PLCE West Samanthaport, NZ
+1 FAMS @F52@
+0 @I154@ INDI
+1 NAME Michelle /Fitzpatrick/
+2 GIVN Michelle
+2 SURN Fitzpatrick
+1 SEX F
+1 BIRT
+2 DATE 18 SEP 1969
+2 PLCE West Samanthaport, NZ
+1 FAMS @F52@
+0 @I155@ INDI
+1 NAME Robert /Deleon/
+2 GIVN Robert
+2 SURN Deleon
+1 SEX F
+1 BIRT
+2 DATE 04 APR 2019
+2 PLCE West Samanthaport, NZ
+1 FAMC @F52@
+0 @F52@ FAM
+1 HUSB @I153@
+1 WIFE @I154@
+1 CHIL @I155@
+1 MARR
+2 DATE 09 AUG 2005
+2 PLCE West Samanthaport, NZ
+0 @I156@ INDI
+1 NAME Samuel /Pollard/
+2 GIVN Samuel
+2 SURN Pollard
+1 SEX M
+1 BIRT
+2 DATE 04 FEB 1978
+2 PLCE East Madisonshire, KM
+1 FAMS @F53@
+0 @I157@ INDI
+1 NAME Shelby /Randolph/
+2 GIVN Shelby
+2 SURN Randolph
+1 SEX F
+1 BIRT
+2 DATE 04 FEB 1979
+2 PLCE East Madisonshire, KM
+1 FAMS @F53@
+0 @I158@ INDI
+1 NAME Jeffery /Pollard/
+2 GIVN Jeffery
+2 SURN Pollard
+1 SEX M
+1 BIRT
+2 DATE 15 DEC 2010
+2 PLCE East Madisonshire, KM
+1 FAMC @F53@
+0 @F53@ FAM
+1 HUSB @I156@
+1 WIFE @I157@
+1 CHIL @I158@
+1 MARR
+2 DATE 27 MAR 2003
+2 PLCE East Madisonshire, KM
+0 @I159@ INDI
+1 NAME Nathan /Thomas/
+2 GIVN Nathan
+2 SURN Thomas
+1 SEX M
+1 BIRT
+2 DATE 19 NOV 1966
+2 PLCE Francesville, ER
+1 FAMS @F54@
+0 @I160@ INDI
+1 NAME Michele /Williams/
+2 GIVN Michele
+2 SURN Williams
+1 SEX F
+1 BIRT
+2 DATE 19 NOV 1965
+2 PLCE Francesville, ER
+1 FAMS @F54@
+0 @I161@ INDI
+1 NAME Justin /Thomas/
+2 GIVN Justin
+2 SURN Thomas
+1 SEX M
+1 BIRT
+2 DATE 02 NOV 2005
+2 PLCE Francesville, ER
+1 FAMC @F54@
+0 @F54@ FAM
+1 HUSB @I159@
+1 WIFE @I160@
+1 CHIL @I161@
+1 MARR
+2 DATE 18 SEP 1993
+2 PLCE Francesville, ER
+0 @I162@ INDI
+1 NAME Michael /Mcgrath/
+2 GIVN Michael
+2 SURN Mcgrath
+1 SEX M
+1 BIRT
+2 DATE 13 JAN 1968
+2 PLCE West Bradleychester, IR
+1 FAMS @F55@
+0 @I163@ INDI
+1 NAME Jeanne /Brennan/
+2 GIVN Jeanne
+2 SURN Brennan
+1 SEX F
+1 BIRT
+2 DATE 14 JAN 1963
+2 PLCE West Bradleychester, IR
+1 FAMS @F55@
+0 @I164@ INDI
+1 NAME Steven /Mcgrath/
+2 GIVN Steven
+2 SURN Mcgrath
+1 SEX F
+1 BIRT
+2 DATE 27 JUL 1997
+2 PLCE West Bradleychester, IR
+1 FAMC @F55@
+0 @F55@ FAM
+1 HUSB @I162@
+1 WIFE @I163@
+1 CHIL @I164@
+1 MARR
+2 DATE 26 AUG 1995
+2 PLCE West Bradleychester, IR
 0 TRLR
