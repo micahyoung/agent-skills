@@ -96,6 +96,21 @@
       ]
     },
     {
+      "id": 9,
+      "prompt": "Can you run a validation check on test-fixtures/family.ged and let me know if there are any problems I should fix?",
+      "expected_output": "Should switch to Validation Mode and run gramps_validate.py against the fixture. Should report the 2 errors found: (1) Judith Elaine Varnell (Jude) has an invalid/missing birth date, and (2) the Decker children are listed out of chronological order in their family record. Should also note the 6 lower-priority warnings (old age without death records, old mother flags) and explain they're less urgent. Response should suggest concrete fixes: add Jude's birth date if known, or correct the child order in the Decker family record.",
+      "files": ["test-fixtures/family.ged"],
+      "expectations": [
+        "Response uses Validation Mode — runs gramps_validate.py (not a python-gedcom ad-hoc script)",
+        "Response reports exactly 2 errors",
+        "Response mentions Judith Elaine Varnell (Jude) has an invalid or missing birth date",
+        "Response mentions the Decker family has children listed out of chronological order",
+        "Response mentions the 6 lower-priority warnings (old age, old mother)",
+        "Response distinguishes errors (worth fixing) from warnings (lower priority)",
+        "Response suggests at least one concrete fix (add Jude's birth date, or fix the Decker child order)"
+      ]
+    },
+    {
       "id": 8,
       "prompt": "I'd like to see Clay's family tree — who are his ancestors going back as far as the file goes?",
       "expected_output": "Should stay in Read Mode and provide a natural language answer tracing Clay's ancestry: parents Dennis and Lorraine, paternal grandparents Roderick (Rod) and Estelle Varnell, maternal grandparents Warren and Opal Decker, and any further generations available. Should offer to generate a visual chart (pedigree/ancestor chart) if the user wants one.",

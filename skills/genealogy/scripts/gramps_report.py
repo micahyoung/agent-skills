@@ -3,12 +3,9 @@
 
 import argparse
 import os
-import subprocess
 import sys
 
-
-DOCKER_IMAGE = "ghcr.io/gramps-project/grampsweb:latest"
-TREE_NAME = "tmp_tree"
+from _gramps_docker import TREE_NAME, run_gramps, run_gramps_or_exit
 
 
 def list_people(input_file):
@@ -22,30 +19,14 @@ def list_people(input_file):
     input_name = os.path.basename(input_path)
     csv_name = "_gramps_people.csv"
 
-    # Import GEDCOM then export people to CSV inside the container
     shell_script = (
         f"gramps -y -C {TREE_NAME} -i /data/{input_name} -q 2>/dev/null && "
         f"gramps -O {TREE_NAME} -e /tmp/{csv_name} -f csv -q 2>/dev/null && "
         f"cat /tmp/{csv_name}"
     )
 
-    docker_cmd = [
-        "docker", "run", "--rm",
-        "-v", f"{input_dir}:/data",
-        "-w", "/data",
-        "--entrypoint", "",
-        DOCKER_IMAGE,
-        "bash", "-c", shell_script,
-    ]
-
-    result = subprocess.run(docker_cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
-    if result.returncode != 0:
-        print(result.stdout, file=sys.stderr)
-        print("Error: failed to list people from Gramps", file=sys.stderr)
-        sys.exit(1)
-
     # Print the CSV output (contains Gramps IDs and names)
-    print(result.stdout)
+    print(run_gramps_or_exit(shell_script, input_dir, "failed to list people from Gramps"))
 
 
 def main():
@@ -192,24 +173,14 @@ examples:
     if args.extra:
         opts += f",{args.extra}"
 
-    # Build the shell command to run inside the container
     shell_script = (
         f"gramps -y -C {TREE_NAME} -i /data/{input_name} -q 2>&1 | tail -2 && "
         f'gramps -O {TREE_NAME} -a report -p "{opts}" -q 2>&1'
     )
 
-    docker_cmd = [
-        "docker", "run", "--rm",
-        "-v", f"{input_dir}:/data",
-        "-w", "/data",
-        "--entrypoint", "",
-        DOCKER_IMAGE,
-        "bash", "-c", shell_script,
-    ]
-
     print(f"Running: {args.report} report -> {output_name} (format={args.format}, center={args.pid})")
     sys.stdout.flush()
-    result = subprocess.run(docker_cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+    result = run_gramps(shell_script, input_dir)
     if result.returncode != 0:
         print(result.stdout, file=sys.stderr)
         print(f"Error: docker command failed (exit {result.returncode})", file=sys.stderr)

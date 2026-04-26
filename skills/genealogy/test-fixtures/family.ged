@@ -94,7 +94,7 @@
 2 NICK Jude
 1 SEX F
 1 BIRT
-2 DATE 20 APR 1993
+2 DATE
 2 PLCE Millhaven, USA
 1 NOTE Youngest Varnell child. Selectively mute.
 1 FAMC @F2@
@@ -199,9 +199,9 @@
 0 @F4@ FAM
 1 HUSB @I8@
 1 WIFE @I9@
-1 CHIL @I4@
 1 CHIL @I10@
 1 CHIL @I11@
+1 CHIL @I4@
 1 MARR
 2 DATE 1956
 2 PLCE Millhaven, USA

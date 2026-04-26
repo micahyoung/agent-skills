@@ -7,12 +7,13 @@ compatibility: Requires uv. Report Mode requires Docker. Uses Bash, Read, and Wr
 
 # Genealogy Skill
 
-You help users explore and edit GEDCOM 5.5 genealogy files. You have three modes:
+You help users explore and edit GEDCOM 5.5 genealogy files. You have four modes:
 - **Read Mode** (default)
 - **Edit Mode**
+- **Validation Mode**
 - **Report Mode**
 
-Always start in Read Mode unless the user explicitly asks to visualize or to make changes.
+Always start in Read Mode unless the user explicitly asks to visualize, validate, or make changes.
 
 ## How You Work
 
@@ -22,9 +23,13 @@ You accomplish most tasks by writing and executing short Python scripts on the f
 
 Always run scripts with `uv run --with python-gedcom python ...` — this handles dependency installation automatically with no separate install step needed.
 
-### Reporting with GRAMPS script
+### Gramps scripts (validation and reports)
 
-Specifically for generating reports, there is [./scripts/gramps_report.py](./scripts/gramps_report.py) which uses the `gramps` library to create any report supported by the application through the CLI interface. Call `./scripts/gramps_report.py --help` for usage details. Note: the script path is relative to this SKILL.md's directory — use `<skill-dir>/scripts/gramps_report.py` when constructing commands.
+Two bundled scripts use the `gramps` library via Docker for deeper operations:
+- **[./scripts/gramps_validate.py](./scripts/gramps_validate.py)** — validates a GEDCOM file and reports errors/warnings
+- **[./scripts/gramps_report.py](./scripts/gramps_report.py)** — generates graphical reports (pedigree charts, PDFs, etc.)
+
+Both share a common Docker helper in `scripts/_gramps_docker.py`. Run either script with `--help` for full usage. Note: paths are relative to this SKILL.md's directory — use `<skill-dir>/scripts/<script>.py` when constructing commands.
 
 ## Finding the GEDCOM File
 
@@ -212,6 +217,80 @@ else:
 ```
 
 This text-level approach gives full control over field edits, changelog notes, and version incrementing. Always re-parse the output file as a sanity check after writing.
+
+## Validation Mode
+
+Switch to this mode when the user wants to check their GEDCOM file for errors, data quality issues, or structural problems.
+
+### When to use Validation Mode
+
+Trigger when the user asks:
+- "Validate my GEDCOM", "Check for errors", "What's wrong with my file?"
+- "Find data quality issues", "Are there any problems in the file?"
+- "Run a health check on my family tree"
+
+### The Validation Workflow
+
+Run the bundled `scripts/gramps_validate.py` script:
+
+```bash
+python <skill-dir>/scripts/gramps_validate.py -i path/to/family.ged
+```
+
+**Options:**
+
+| Flag | Default | Description |
+|------|---------|-------------|
+| `-i / --input` | required | GEDCOM file path |
+| `-f / --format` | `text` | Output format: `text` or `json` |
+| `--all` | off | Show suppressed noise warnings too |
+
+**Prerequisites:** Docker must be running.
+
+### Interpreting results
+
+The script runs two Gramps phases:
+1. **Import** — catches spec violations (unsupported tags, invalid GEDCOM version)
+2. **Verify** — catches semantic issues (invalid dates, out-of-order births, age anomalies)
+
+**Error levels:**
+- `E` (error) — definite data problem; worth investigating and fixing
+- `W` (warning) — possible issue; may be legitimate (e.g. large age gap between siblings)
+
+**Noise filtering:** By default, low-signal issues are suppressed:
+- `"Tag recognized but not supported"` — Geni.com `EMAIL`/`PHON` extensions, not real errors
+- `"GEDCOM version not supported"` — spec version mismatch, harmless
+- `"Husband and wife with the same surname"` — coincidental surname match, rarely meaningful
+
+Use `--all` to see the full unfiltered output.
+
+**Exit codes:** `0` = no errors; `1` = one or more errors found (useful for scripting).
+
+### After validation
+
+For any real errors found, switch to Edit Mode to fix them. Common fixes:
+- `"Invalid birth date"` with an empty `DATE` field — remove the empty `BIRT` tag or add a date
+- `"Person events not in chronological order"` — check event dates for that individual
+- `"Children not in chronological order"` — check birth dates of children in that family
+
+### JSON output for programmatic use
+
+```bash
+python <skill-dir>/scripts/gramps_validate.py -i family.ged -f json
+```
+
+Output structure:
+```json
+{
+  "summary": {"errors": 3, "warnings": 2, "noise_suppressed": 187},
+  "errors": [
+    {"source": "verify", "level": "E", "record_type": "Person",
+     "record_id": "IJANPETERRYNDERS", "record_name": "Rynders, Jan Peter",
+     "message": "Person events are not in chronological order"}
+  ],
+  "warnings": [...]
+}
+```
 
 ## Report Mode
 
