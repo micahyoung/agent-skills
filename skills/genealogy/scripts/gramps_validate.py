@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate a GEDCOM file using Gramps via Docker."""
+"""Validate a GEDCOM file using Gramps (local install preferred, Docker fallback)."""
 
 import argparse
 import json
@@ -7,7 +7,7 @@ import os
 import re
 import sys
 
-from _gramps_docker import TREE_NAME, run_gramps
+from _gramps_backend import TREE_NAME, run_gramps
 
 # Verify output line: "W: <message>, Person: <ID>, <Name>"
 _VERIFY_RE = re.compile(r"^([WE]):\s+(.+?),\s+(Person|Family):\s+(\S+),\s+(.+)$")
@@ -82,7 +82,7 @@ def validate(input_path: str, input_name: str, input_dir: str) -> tuple[list[dic
 
     if result.returncode != 0 and not verify_text:
         print(output, file=sys.stderr)
-        print("Error: Gramps Docker command failed", file=sys.stderr)
+        print("Error: Gramps command failed", file=sys.stderr)
         sys.exit(1)
 
     return _parse_import(import_text), _parse_verify(verify_text)
@@ -166,7 +166,7 @@ def _print_json(issues: list[dict], show_noise: bool) -> int:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Validate a GEDCOM file using Gramps via Docker (ghcr.io/gramps-project/grampsweb).",
+        description="Validate a GEDCOM file using Gramps (local install preferred, Docker fallback).",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""\
 exit codes:

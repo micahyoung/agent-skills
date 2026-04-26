@@ -2,7 +2,7 @@
 name: genealogy
 description: >
   Parse, explore, edit, and generate visual reports from GEDCOM (.ged) genealogy files. Use this skill whenever the user mentions a .ged file, GEDCOM data, family trees, ancestry, genealogy research, lineage, ancestors, descendants, pedigree charts, family history, heritage, great-grandparents, or wants to look up relatives, trace family connections, find out "who were my relatives", or correct/update genealogical records. Also trigger when the user has a .ged file open or referenced in conversation and asks questions about people, families, dates, or relationships — even if they don't say "genealogy" explicitly. Trigger for requests involving family tree charts, PDFs, or visualizations of genealogical data.
-compatibility: Requires uv. Report Mode requires Docker. Uses Bash, Read, and Write tools.
+compatibility: Requires uv. Report Mode requires Gramps (local install preferred, Docker fallback). Uses Bash, Read, and Write tools.
 ---
 
 # Genealogy Skill
@@ -25,11 +25,11 @@ Always run scripts with `uv run --with python-gedcom python ...` — this handle
 
 ### Gramps scripts (validation and reports)
 
-Two bundled scripts use the `gramps` library via Docker for deeper operations:
+Two bundled scripts use the `gramps` library for deeper operations (local install preferred, Docker fallback):
 - **[./scripts/gramps_validate.py](./scripts/gramps_validate.py)** — validates a GEDCOM file and reports errors/warnings
 - **[./scripts/gramps_report.py](./scripts/gramps_report.py)** — generates graphical reports (pedigree charts, PDFs, etc.)
 
-Both share a common Docker helper in `scripts/_gramps_docker.py`. Run either script with `--help` for full usage. Note: paths are relative to this SKILL.md's directory — use `<skill-dir>/scripts/<script>.py` when constructing commands.
+Both share a common helper in `scripts/_gramps_backend.py`. Run either script with `--help` for full usage. Note: paths are relative to this SKILL.md's directory — use `<skill-dir>/scripts/<script>.py` when constructing commands.
 
 ## Finding the GEDCOM File
 
@@ -245,7 +245,7 @@ python <skill-dir>/scripts/gramps_validate.py -i path/to/family.ged
 | `-f / --format` | `text` | Output format: `text` or `json` |
 | `--all` | off | Show suppressed noise warnings too |
 
-**Prerequisites:** Docker must be running.
+**Prerequisites:** A local Gramps install is preferred (e.g. `/Applications/Gramps.app` on macOS, or `gramps` in `$PATH` on Linux). Falls back to Docker if Gramps is not found locally.
 
 ### Interpreting results
 
@@ -309,7 +309,7 @@ If the user asks for an ASCII chart or text-based tree, stay in Read Mode and ge
 
 ### Prerequisites
 
-- **Docker must be running**. The script pulls `ghcr.io/gramps-project/grampsweb:latest`. If Docker isn't available, tell the user and suggest they start it.
+- A local Gramps install is preferred (e.g. `/Applications/Gramps.app` on macOS, or `gramps` in `$PATH` on Linux). Falls back to Docker (`ghcr.io/gramps-project/grampsweb:latest`) if Gramps is not found locally.
 - The output file must be in the **same directory** as the input GEDCOM file.
 
 ### The Report Workflow

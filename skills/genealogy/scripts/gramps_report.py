@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
-"""Generate Gramps reports from GEDCOM files via Docker."""
+"""Generate Gramps reports from GEDCOM files (local install preferred, Docker fallback)."""
 
 import argparse
 import os
 import sys
 
-from _gramps_docker import TREE_NAME, run_gramps, run_gramps_or_exit
+from _gramps_backend import TREE_NAME, run_gramps, run_gramps_or_exit
 
 
 def list_people(input_file):
-    """Import GEDCOM into Gramps via Docker and list all people with Gramps IDs."""
+    """Import GEDCOM into Gramps and list all people with Gramps IDs."""
     input_path = os.path.abspath(input_file)
     if not os.path.isfile(input_path):
         print(f"Error: input file not found: {input_path}", file=sys.stderr)
@@ -31,7 +31,7 @@ def list_people(input_file):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Run a Gramps report via Docker (ghcr.io/gramps-project/grampsweb).",
+        description="Run a Gramps report (local install preferred, Docker fallback).",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""\
 output formats (-f):
@@ -183,7 +183,7 @@ examples:
     result = run_gramps(shell_script, input_dir)
     if result.returncode != 0:
         print(result.stdout, file=sys.stderr)
-        print(f"Error: docker command failed (exit {result.returncode})", file=sys.stderr)
+        print(f"Error: Gramps command failed (exit {result.returncode})", file=sys.stderr)
         sys.exit(1)
 
     # Gramps appends .gv to dot output files — rename if needed
