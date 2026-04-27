@@ -17,19 +17,22 @@ Always start in Read Mode unless the user explicitly asks to visualize, validate
 
 ## How You Work
 
-### Reading/Editing using python-gedcom in on-the-fly scripts
+### Scripting with gramps_python
 
-You accomplish most tasks by writing and executing short Python scripts on the fly using the `python-gedcom` library via `uv run`. This lets you handle arbitrarily complex queries and edits against real GEDCOM data rather than trying to eyeball the raw file.
+You accomplish most tasks by writing and executing short Python scripts on the fly using the bundled `gramps_python` interpreter. It gives you full access to the Gramps Python libraries and handles the native/Docker setup automatically — no install step needed.
 
-Always run scripts with `uv run --with python-gedcom python ...` — this handles dependency installation automatically with no separate install step needed.
+Run scripts with:
+```
+<skill-dir>/scripts/gramps_python script.py
+<skill-dir>/scripts/gramps_python -c "one-liner code"
+```
 
-### Gramps scripts (validation and reports)
-
-Two bundled scripts use the `gramps` library for deeper operations (local install preferred, Docker fallback):
+Use `gramps_python` for all Read and Edit mode work. Three additional bundled scripts handle deeper operations:
 - **[./scripts/gramps_validate.py](./scripts/gramps_validate.py)** — validates a GEDCOM file and reports errors/warnings
 - **[./scripts/gramps_report.py](./scripts/gramps_report.py)** — generates graphical reports (pedigree charts, PDFs, etc.)
+- **[./scripts/_gramps_backend.py](./scripts/_gramps_backend.py)** — shared helper (native/Docker detection); not called directly
 
-Both share a common helper in `scripts/_gramps_backend.py`. Run either script with `--help` for full usage. Note: paths are relative to this SKILL.md's directory — use `<skill-dir>/scripts/<script>.py` when constructing commands.
+Run either script with `--help` for full usage. Note: paths are relative to this SKILL.md's directory — use `<skill-dir>/scripts/<script>.py` when constructing commands.
 
 ## Finding the GEDCOM File
 
@@ -46,7 +49,7 @@ This is the primary mode. The user has a .ged file and wants to learn about the 
 
 ### Approach
 
-1. **Parse the file** by writing a Python script that loads it with `gedcom.parser.Parser`
+1. **Parse the file** by writing a Python script that loads it with `import_as_dict` and run it with `gramps_python`
 2. **Extract the relevant data** — names, dates, places, relationships, notes
 3. **Respond in natural language** — weave the facts into readable sentences and paragraphs, not raw data dumps
 
@@ -88,26 +91,44 @@ Default to natural language prose. If the user asks for a specific format (markd
 
 ### Python scripting patterns for Read Mode
 
-Here's the general shape of a read script:
+Here's the general shape of a read script (run with `<skill-dir>/scripts/gramps_python script.py`):
 
 ```python
-from gedcom.parser import Parser
-from gedcom.element.individual import IndividualElement
-from gedcom.element.family import FamilyElement
+from gramps.gen.db.utils import import_as_dict
+from gramps.cli.user import User
 
-parser = Parser()
-parser.parse_file("path/to/file.ged")
+db = import_as_dict("path/to/file.ged", User())
 
-elements = parser.get_element_dictionary()
+# Example: find an individual by surname fragment
+for handle in db.get_person_handles():
+    person = db.get_person_from_handle(handle)
+    name = person.get_primary_name()
+    first = name.get_first_name()
+    last = name.get_surname()
 
-# Example: find an individual by name fragment
-for key, element in elements.items():
-    if isinstance(element, IndividualElement):
-        (first, last) = element.get_name()
-        if "varnell" in last.lower():
-            birth = element.get_birth_data()
-            print(f"{first} {last}, born {birth[0]} in {birth[1]}")
+    if "varnell" in last.lower():
+        birth_ref = person.get_birth_ref()
+        birth_date = birth_place = ""
+        if birth_ref:
+            birth_event = db.get_event_from_handle(birth_ref.ref)
+            birth_date = birth_event.get_date_object().get_text()
+            place_h = birth_event.get_place_handle()
+            if place_h:
+                birth_place = db.get_place_from_handle(place_h).get_title()
+        print(f"{first} {last}, born {birth_date} in {birth_place}")
 ```
+
+**Key API methods:**
+
+| Need | Call |
+|---|---|
+| All people | `db.get_person_handles()` → `db.get_person_from_handle(h)` |
+| Name | `person.get_primary_name().get_first_name()` / `.get_surname()` |
+| Birth date | `db.get_event_from_handle(person.get_birth_ref().ref).get_date_object().get_text()` |
+| Birth place | `db.get_place_from_handle(event.get_place_handle()).get_title()` |
+| Families | `db.get_family_handles()` → `db.get_family_from_handle(h)` |
+| Family members | `fam.get_father_handle()`, `.get_mother_handle()`, `.get_child_ref_list()` |
+| Person count | `db.get_number_of_people()` |
 
 Adapt freely. You're writing throwaway scripts to extract exactly what the user needs — not building a reusable library.
 
@@ -151,11 +172,10 @@ Editing genealogical records is serious business. A wrong edit can propagate con
 
 ### Python scripting patterns for Edit Mode
 
-For edits, you'll typically need to work at a lower level — reading the file, modifying the element tree, and writing back. Here's the general approach:
+For edits, work at the text level — read the file as lines, modify, write back, then re-parse with Gramps as a sanity check. Run with `<skill-dir>/scripts/gramps_python script.py`.
 
 ```python
 import datetime
-from gedcom.parser import Parser
 
 filepath = "path/to/file.ged"
 target_xref = "@I5@"
@@ -169,7 +189,7 @@ new_lines = []
 in_target = False
 found = False
 
-for i, line in enumerate(lines):
+for line in lines:
     stripped = line.strip()
 
     # Detect when we enter/leave the target individual record
@@ -192,15 +212,16 @@ for i, line in enumerate(lines):
 if found:
     with open(filepath, "w", encoding="utf-8") as f:
         f.writelines(new_lines)
-    # Sanity check: re-parse to ensure the file is still valid
-    parser = Parser()
-    parser.parse_file(filepath)
-    print("Edit applied and file re-parsed successfully.")
+    # Sanity check: re-parse with Gramps to confirm the file is still valid
+    from gramps.gen.db.utils import import_as_dict
+    from gramps.cli.user import User
+    db = import_as_dict(filepath, User())
+    print(f"Edit applied and file re-parsed successfully ({db.get_number_of_people()} people).")
 else:
     print(f"Warning: OCCU field not found for {target_xref}")
 ```
 
-This text-level approach gives full control over field edits, changelog notes, and version incrementing. Always re-parse the output file as a sanity check after writing.
+This text-level approach gives full control over field edits and changelog notes. Always re-parse the output file as a sanity check after writing.
 
 ## Validation Mode
 
@@ -299,7 +320,7 @@ If the user asks for an ASCII chart or text-based tree, stay in Read Mode and ge
 ### The Report Workflow
 
 1. **Identify the center person**. Most reports require a Gramps `pid`. Gramps assigns its own internal IDs during import, which may differ from the GEDCOM `@XREF@` identifiers. To get the correct Gramps ID:
-   1. First, find the person's name using a Read Mode python-gedcom script (to confirm you have the right individual).
+   1. First, find the person's name using a Read Mode `gramps_python` script (to confirm you have the right individual).
    2. Then run `python <skill-dir>/scripts/gramps_report.py --list-people -i file.ged` to see Gramps-assigned IDs alongside names.
    3. Match by name and use that Gramps ID as the `--pid` value.
 
@@ -342,7 +363,7 @@ If the user asks for an ASCII chart or text-based tree, stay in Read Mode and ge
 
 ## Handling Errors Gracefully
 
-- If the .ged file has encoding issues, try `UTF-8` and `latin-1` before giving up
-- If the parser chokes on non-standard tags, catch the error and fall back to line-level parsing for those sections
+- If `import_as_dict` fails due to encoding issues, check that the file is valid UTF-8; some older GEDCOM files use `latin-1` and may need conversion before import
+- If a non-standard tag causes an import warning, it's usually noise (Gramps flags but still imports the file) — check the validation output before assuming data loss
 - If a query returns no results, say so helpfully: "I didn't find anyone with that surname in the file. The surnames present are: Varnell, Decker, Caine..."
 - If asked about relationships the file can't determine (no linking FAM records), explain what's missing rather than guessing

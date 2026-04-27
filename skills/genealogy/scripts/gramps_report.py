@@ -5,7 +5,7 @@ import argparse
 import os
 import sys
 
-from _gramps_backend import TREE_NAME, run_gramps, run_gramps_or_exit
+from _gramps_backend import TREE_NAME, remove_family_tree, run_gramps, run_gramps_or_exit
 
 
 def list_people(input_file):
@@ -14,6 +14,9 @@ def list_people(input_file):
     if not os.path.isfile(input_path):
         print(f"Error: input file not found: {input_path}", file=sys.stderr)
         sys.exit(1)
+
+    # Ensure clean slate by removing any existing tmp_tree
+    remove_family_tree(TREE_NAME)
 
     input_dir = os.path.dirname(input_path)
     input_name = os.path.basename(input_path)
@@ -167,6 +170,9 @@ examples:
     if output_dir != input_dir:
         print(f"Error: output file must be in the same directory as input file ({input_dir})", file=sys.stderr)
         sys.exit(1)
+
+    # Ensure clean slate by removing any existing tmp_tree
+    remove_family_tree(TREE_NAME)
 
     # Build report options string
     opts = f"name={args.report},pid={args.pid},off={args.format},of=/data/{output_name}"

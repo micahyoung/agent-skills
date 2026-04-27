@@ -30,6 +30,19 @@ def _find_gramps_binary() -> str | None:
     return None
 
 
+def find_gramps_app_resources() -> tuple[str, str] | None:
+    """Return (lib_dir, site_packages_dir) for the macOS Gramps app bundle, or None."""
+    app_binary = "/Applications/Gramps.app/Contents/MacOS/Gramps"
+    if not (os.path.isfile(app_binary) and os.access(app_binary, os.X_OK)):
+        return None
+    resources = os.path.join(os.path.dirname(app_binary), "..", "Resources")
+    lib_dir = os.path.join(resources, "lib")
+    sp_dir = os.path.join(lib_dir, "python3.13", "site-packages")
+    if os.path.isdir(sp_dir):
+        return lib_dir, sp_dir
+    return None
+
+
 def run_gramps(shell_script: str, input_dir: str) -> subprocess.CompletedProcess:
     """Run a bash script using Gramps natively if available, otherwise via Docker."""
     native_binary = _find_gramps_binary()
@@ -62,3 +75,32 @@ def run_gramps_or_exit(shell_script: str, input_dir: str, error_msg: str) -> str
         print(f"Error: {error_msg}", file=sys.stderr)
         sys.exit(1)
     return result.stdout
+
+
+def remove_family_tree(tree_name: str) -> None:
+    """Remove a Gramps family tree if it exists (best effort, silent on failure)."""
+    # This is a best-effort cleanup; ignore errors if tree doesn't exist
+    # or Gramps is not available
+    shell_script = f"gramps -y -r {tree_name} 2>/dev/null || true"
+    try:
+        native_binary = _find_gramps_binary()
+        if native_binary:
+            subprocess.run(
+                ["bash", "-c", shell_script.replace("gramps ", f"{native_binary} ")],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+        else:
+            docker_cmd = [
+                "docker", "run", "--rm",
+                "--entrypoint", "",
+                DOCKER_IMAGE,
+                "bash", "-c", shell_script,
+            ]
+            subprocess.run(
+                docker_cmd,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+    except Exception:
+        pass

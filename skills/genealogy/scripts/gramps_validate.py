@@ -7,7 +7,7 @@ import os
 import re
 import sys
 
-from _gramps_backend import TREE_NAME, run_gramps
+from _gramps_backend import TREE_NAME, remove_family_tree, run_gramps
 
 # Verify output line: "W: <message>, Person: <ID>, <Name>"
 _VERIFY_RE = re.compile(r"^([WE]):\s+(.+?),\s+(Person|Family):\s+(\S+),\s+(.+)$")
@@ -63,6 +63,9 @@ def _parse_verify(text: str) -> list[dict]:
 
 
 def validate(input_path: str, input_name: str, input_dir: str) -> tuple[list[dict], list[dict]]:
+    # Ensure clean slate by removing any existing tmp_tree
+    remove_family_tree(TREE_NAME)
+
     shell_script = (
         f"echo '=== IMPORT ===' && "
         f"gramps -y -C {TREE_NAME} -i /data/{input_name} 2>&1 && "
