@@ -140,9 +140,7 @@ Editing genealogical records is serious business. A wrong edit can propagate con
    - Describe what changed and from what to what
    - Include the source/reason if the user provided one; if not, ask or note "per user correction"
 
-6. **Increment the internal version**: Update the HEAD source version (e.g., `VERS 1.0` → `VERS 1.1`) each time edits are saved. This provides a simple audit trail within the file itself.
-
-7. **Report what was done**: After writing, summarize the changes made.
+6. **Report what was done**: After writing, summarize the changes made.
 
 ### Edit safety rules
 
@@ -188,20 +186,6 @@ for i, line in enumerate(lines):
                          f"(source: per family member correction)\n")
         found = True
         continue
-
-    # Increment VERS in the HEAD section
-    if stripped.startswith("2 VERS") and any(
-        l.strip().startswith("1 SOUR") for l in lines[max(0,i-5):i]
-    ):
-        parts = stripped.split()
-        if len(parts) == 3:
-            try:
-                major, minor = parts[2].split(".")
-                new_vers = f"{major}.{int(minor)+1}"
-                new_lines.append(f"2 VERS {new_vers}\n")
-                continue
-            except ValueError:
-                pass
 
     new_lines.append(line)
 
