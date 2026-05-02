@@ -118,6 +118,20 @@ for handle in db.get_person_handles():
         print(f"{first} {last}, born {birth_date} in {birth_place}")
 ```
 
+Ancestor traversal — the most common multi-step query (run with `<skill-dir>/scripts/gramps_python script.py`):
+
+```python
+# Walk ancestor chain for a person
+for fam_handle in person.get_parent_family_handle_list():
+    fam = db.get_family_from_handle(fam_handle)
+    for parent_handle in [fam.get_father_handle(), fam.get_mother_handle()]:
+        if parent_handle:
+            parent = db.get_person_from_handle(parent_handle)
+            parent_name = parent.get_primary_name()
+            is_male = parent.get_gender().is_male()
+            # Recurse: call get_parent_family_handle_list(parent) for grandparents
+```
+
 **Key API methods:**
 
 | Need | Call |
@@ -129,6 +143,13 @@ for handle in db.get_person_handles():
 | Families | `db.get_family_handles()` → `db.get_family_from_handle(h)` |
 | Family members | `fam.get_father_handle()`, `.get_mother_handle()`, `.get_child_ref_list()` |
 | Person count | `db.get_number_of_people()` |
+| Gender | `person.get_gender().is_male()` / `.is_female()` — use the methods, **not** integer comparison (SQLite backend mapping is counterintuitive) |
+| Nickname | `name.get_nick_name()` — not `get_call_name()` |
+| Parent family | `person.get_parent_family_handle_list()` — list of family handles where person is a child |
+| Child handle | `child_ref.ref` — ChildRef uses `.ref` (same as EventRef) |
+| Notes | Iterate `name.get_note_child_list()` → `db.get_note_from_handle(nc.ref).get()` |
+| Occupation | Iterate `person.get_event_ref_list()`, check `str(event.get_type()) == "Occupation"` → `event.get_description()` |
+| Death | `person.get_death_ref()` — same EventRef pattern as birth |
 
 Adapt freely. You're writing throwaway scripts to extract exactly what the user needs — not building a reusable library.
 
@@ -367,3 +388,4 @@ If the user asks for an ASCII chart or text-based tree, stay in Read Mode and ge
 - If a non-standard tag causes an import warning, it's usually noise (Gramps flags but still imports the file) — check the validation output before assuming data loss
 - If a query returns no results, say so helpfully: "I didn't find anyone with that surname in the file. The surnames present are: Varnell, Decker, Caine..."
 - If asked about relationships the file can't determine (no linking FAM records), explain what's missing rather than guessing
+- If genders appear swapped (men shown as female), you're comparing `person.get_gender()` to an integer — switch to `.is_male()` / `.is_female()` methods
