@@ -19,6 +19,8 @@ _NATIVE_PATHS = (
 
 
 def _find_gramps_binary() -> str | None:
+    if os.environ.get("USE_GRAMPS_DOCKER"):
+        return None
     for path in _NATIVE_PATHS:
         if path.startswith("/"):
             if os.path.isfile(path) and os.access(path, os.X_OK):
@@ -43,14 +45,16 @@ def find_gramps_app_resources() -> tuple[str, str] | None:
     return None
 
 
-def run_gramps(shell_script: str, input_dir: str) -> subprocess.CompletedProcess:
+def run_gramps(shell_script: str, input_dir: str | None = None) -> subprocess.CompletedProcess:
     """Run a bash script using Gramps natively if available, otherwise via Docker."""
     native_binary = _find_gramps_binary()
     if native_binary:
-        script = shell_script.replace("gramps ", f"{native_binary} ").replace("/data/", f"{input_dir}/")
+        script = shell_script.replace("gramps ", f"{native_binary} ")
+        if input_dir:
+            script = script.replace("/data/", f"{input_dir}/")
         return subprocess.run(
             ["bash", "-c", script],
-            cwd=input_dir,
+            cwd=input_dir or None,
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
             text=True,
@@ -58,8 +62,7 @@ def run_gramps(shell_script: str, input_dir: str) -> subprocess.CompletedProcess
 
     docker_cmd = [
         "docker", "run", "--rm",
-        "-v", f"{input_dir}:/data",
-        "-w", "/data",
+        *((["-v", f"{input_dir}:/data", "-w", "/data"]) if input_dir else []),
         "--entrypoint", "",
         DOCKER_IMAGE,
         "bash", "-c", shell_script,
@@ -79,28 +82,7 @@ def run_gramps_or_exit(shell_script: str, input_dir: str, error_msg: str) -> str
 
 def remove_family_tree(tree_name: str) -> None:
     """Remove a Gramps family tree if it exists (best effort, silent on failure)."""
-    # This is a best-effort cleanup; ignore errors if tree doesn't exist
-    # or Gramps is not available
-    shell_script = f"gramps -y -r {tree_name} 2>/dev/null || true"
     try:
-        native_binary = _find_gramps_binary()
-        if native_binary:
-            subprocess.run(
-                ["bash", "-c", shell_script.replace("gramps ", f"{native_binary} ")],
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-        else:
-            docker_cmd = [
-                "docker", "run", "--rm",
-                "--entrypoint", "",
-                DOCKER_IMAGE,
-                "bash", "-c", shell_script,
-            ]
-            subprocess.run(
-                docker_cmd,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
+        run_gramps(f"gramps -y -r {tree_name} 2>/dev/null || true")
     except Exception:
         pass

@@ -84,6 +84,7 @@ Write Python scripts to handle these (and similar) requests:
 - **Family structure**: "Show me Dennis's family", "Who are the Decker sisters?"
 - **Statistics**: "How many people are in this file?", "What's the average number of children?"
 - **Notes and details**: "What do we know about Estelle?", "Any military service records?"
+- For ancestor/descendant queries, end by offering a visual chart: "Would you like me to generate a pedigree chart as a PDF?"
 
 ### Output format
 
@@ -118,18 +119,27 @@ for handle in db.get_person_handles():
         print(f"{first} {last}, born {birth_date} in {birth_place}")
 ```
 
-Ancestor traversal — the most common multi-step query (run with `<skill-dir>/scripts/gramps_python script.py`):
+Ancestor traversal — show parents and grandparents concretely (run with `<skill-dir>/scripts/gramps_python script.py`):
 
 ```python
-# Walk ancestor chain for a person
+# Find parents and grandparents — 2 levels, no queue needed
 for fam_handle in person.get_parent_family_handle_list():
     fam = db.get_family_from_handle(fam_handle)
     for parent_handle in [fam.get_father_handle(), fam.get_mother_handle()]:
-        if parent_handle:
-            parent = db.get_person_from_handle(parent_handle)
-            parent_name = parent.get_primary_name()
-            is_male = parent.get_gender().is_male()
-            # Recurse: call get_parent_family_handle_list(parent) for grandparents
+        if not parent_handle:
+            continue
+        parent = db.get_person_from_handle(parent_handle)
+        pn = parent.get_primary_name()
+        nick = pn.get_nick_name()
+        print(f"Parent: {pn.get_first_name()}" + (f" ({nick})" if nick else ""))
+        # Grandparents — same pattern, nested one level deeper
+        for gfam in parent.get_parent_family_handle_list():
+            gf = db.get_family_from_handle(gfam)
+            for gph in [gf.get_father_handle(), gf.get_mother_handle()]:
+                if gph:
+                    gp = db.get_person_from_handle(gph)
+                    gpn = gp.get_primary_name()
+                    print(f"  Grandparent: {gpn.get_first_name()} {gpn.get_surname()}")
 ```
 
 **Key API methods:**
@@ -143,11 +153,11 @@ for fam_handle in person.get_parent_family_handle_list():
 | Families | `db.get_family_handles()` → `db.get_family_from_handle(h)` |
 | Family members | `fam.get_father_handle()`, `.get_mother_handle()`, `.get_child_ref_list()` |
 | Person count | `db.get_number_of_people()` |
-| Gender | `person.get_gender().is_male()` / `.is_female()` — use the methods, **not** integer comparison (SQLite backend mapping is counterintuitive) |
+| Gender | `person.get_gender() == Person.MALE` / `== Person.FEMALE` — returns int, not enum methods |
 | Nickname | `name.get_nick_name()` — not `get_call_name()` |
 | Parent family | `person.get_parent_family_handle_list()` — list of family handles where person is a child |
 | Child handle | `child_ref.ref` — ChildRef uses `.ref` (same as EventRef) |
-| Notes | Iterate `name.get_note_child_list()` → `db.get_note_from_handle(nc.ref).get()` |
+| Notes | `person.get_referenced_handles_recursively()` → filter `cls == "Note"` → `db.get_note_from_handle(h).get()` |
 | Occupation | Iterate `person.get_event_ref_list()`, check `str(event.get_type()) == "Occupation"` → `event.get_description()` |
 | Death | `person.get_death_ref()` — same EventRef pattern as birth |
 
@@ -388,4 +398,4 @@ If the user asks for an ASCII chart or text-based tree, stay in Read Mode and ge
 - If a non-standard tag causes an import warning, it's usually noise (Gramps flags but still imports the file) — check the validation output before assuming data loss
 - If a query returns no results, say so helpfully: "I didn't find anyone with that surname in the file. The surnames present are: Varnell, Decker, Caine..."
 - If asked about relationships the file can't determine (no linking FAM records), explain what's missing rather than guessing
-- If genders appear swapped (men shown as female), you're comparing `person.get_gender()` to an integer — switch to `.is_male()` / `.is_female()` methods
+- If genders appear swapped, you're likely using integer comparison backwards — use `person.get_gender() == Person.MALE` / `== Person.FEMALE` (where MALE=1, FEMALE=0)
