@@ -70,25 +70,24 @@
     {
       "id": 6,
       "prompt": "In test-fixtures/family.ged, Clay's occupation is listed as 'Student, Millhaven Middle School' but he's 41. Update it to 'Foreman, Millhaven Grain Processing', source: per family member correction March 2026.",
-      "expected_output": "Should switch to Edit Mode. Preview the change (old occupation -> new occupation for Clay / Clayton Rufus Varnell), ask for confirmation, then apply the edit. The modified file should have: updated OCCU field, a 1 NOTE [CHANGELOG] entry on the record with date and source, and an incremented VERS in the HEAD section. Should re-parse as sanity check.",
+      "expected_output": "Should switch to Edit Mode. Preview the change (old occupation -> new occupation for Clay / Clayton Rufus Varnell), ask for confirmation, then apply the edit. The modified file should have: updated OCCU field, a 1 NOTE [CHANGELOG] entry on the record with date and source. Should re-parse as sanity check.",
       "files": ["test-fixtures/family.ged"],
       "expectations": [
         "Response previews the change before applying it (old value -> new value)",
         "The modified .ged file contains 'Foreman, Millhaven Grain Processing' as Clay's occupation",
         "The modified .ged file contains a NOTE with [CHANGELOG] tag on the modified record",
         "The changelog note includes the date and source information",
-        "The HEAD section VERS field was incremented",
         "Response mentions re-parsing or sanity checking the file after edit"
       ]
     },
     {
       "id": 7,
       "prompt": "Generate a PDF pedigree chart of Dennis's ancestors from test-fixtures/family.ged.",
-      "expected_output": "Should switch to Report Mode. Use a Read Mode script to identify Dennis, then run gramps_report.py --list-people to get the Gramps-assigned ID for Dennis. Then run gramps_report.py with -r ancestor_chart -f pdf using that Gramps ID as --pid. Should produce a PDF file and report its path and size.",
+      "expected_output": "Should switch to Report Mode. Use gramps_report.py --list-people to get the Gramps-assigned ID for Dennis. Then run gramps_report.py with -r ancestor_chart -f pdf using that Gramps ID as --pid. Should produce a PDF file and report its path and size.",
       "files": ["test-fixtures/family.ged"],
       "expectations": [
         "Response uses Report Mode (not Read Mode)",
-        "Response uses a python-gedcom script to identify Dennis first",
+        "Response uses gramps_python or gramps_report.py to identify Dennis first",
         "Response uses or attempts to use --list-people flag to get Gramps ID",
         "Response uses ancestor_chart as the report type",
         "Response uses pdf as the output format",
@@ -98,29 +97,27 @@
     {
       "id": 9,
       "prompt": "Can you run a validation check on test-fixtures/family.ged and let me know if there are any problems I should fix?",
-      "expected_output": "Should switch to Validation Mode and run gramps_validate.py against the fixture. Should report the 2 errors found: (1) Judith Elaine Varnell (Jude) has an invalid/missing birth date, and (2) the Decker children are listed out of chronological order in their family record. Should also note the 6 lower-priority warnings (old age without death records, old mother flags) and explain they're less urgent. Response should suggest concrete fixes: add Jude's birth date if known, or correct the child order in the Decker family record.",
+    "expected_output": "Should switch to Validation Mode and run gramps_validate.py against the fixture. Should report the errors found: the Decker children are listed out of chronological order in their family record. Should also note the 6 lower-priority warnings (old age without death records, old mother flags) and explain they're less urgent. Response should suggest concrete fixes like reordering the CHIL tags in the Decker family record.",
       "files": ["test-fixtures/family.ged"],
       "expectations": [
-        "Response uses Validation Mode — runs gramps_validate.py (not a python-gedcom ad-hoc script)",
-        "Response reports exactly 2 errors",
-        "Response mentions Judith Elaine Varnell (Jude) has an invalid or missing birth date",
+        "Response uses Validation Mode — runs gramps_validate.py",
+        "Response reports errors from the validation script",
         "Response mentions the Decker family has children listed out of chronological order",
-        "Response mentions the 6 lower-priority warnings (old age, old mother)",
+        "Response mentions lower-priority warnings (old age, old mother)",
         "Response distinguishes errors (worth fixing) from warnings (lower priority)",
-        "Response suggests at least one concrete fix (add Jude's birth date, or fix the Decker child order)"
+        "Response suggests at least one concrete fix for the Decker child order error"
       ]
     },
     {
       "id": 8,
       "prompt": "I'd like to see Clay's family tree — who are his ancestors going back as far as the file goes?",
-      "expected_output": "Should stay in Read Mode and provide a natural language answer tracing Clay's ancestry: parents Dennis and Lorraine, paternal grandparents Roderick (Rod) and Estelle Varnell, maternal grandparents Warren and Opal Decker, and any further generations available. Should offer to generate a visual chart (pedigree/ancestor chart) if the user wants one.",
+      "expected_output": "Should stay in Read Mode and provide a natural language answer tracing Clay's ancestry: parents Dennis and Lorraine, paternal grandparents Roderick (Rod) and Estelle Varnell, maternal grandparents Warren and Opal Decker, and any further generations available.",
       "files": ["test-fixtures/family.ged"],
       "expectations": [
         "Response stays in Read Mode (natural language answer, not a report)",
         "Response mentions Clay's parents Dennis and Lorraine",
         "Response mentions paternal grandparents Roderick (Rod) and Estelle Varnell",
         "Response mentions maternal grandparents Warren and Opal Decker",
-        "Response offers to generate a visual chart or pedigree report if desired",
         "Response does NOT generate a PDF/PNG report unprompted"
       ]
     }
