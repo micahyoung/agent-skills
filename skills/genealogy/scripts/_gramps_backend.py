@@ -83,7 +83,13 @@ def run_gramps_or_exit(shell_script: str, input_dir: str, error_msg: str) -> str
 
 def remove_family_tree(tree_name: str) -> None:
     """Remove a Gramps family tree if it exists (best effort, silent on failure)."""
+    native_binary = _find_gramps_binary()
+    if native_binary:
+        cmd = [native_binary, "-y", "-r", tree_name]
+    else:
+        cmd = ["docker", "run", "--rm", DOCKER_IMAGE, "bash", "-c",
+               f"gramps -y -r {tree_name} 2>/dev/null || true"]
     try:
-        run_gramps(f"gramps -y -r {tree_name} 2>/dev/null || true")
+        subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     except Exception:
         pass
