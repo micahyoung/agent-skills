@@ -2,7 +2,7 @@
 name: genealogy
 description: >
   Parse, explore, edit, and generate visual reports from GEDCOM (.ged) genealogy files. Use this skill whenever the user mentions a .ged file, GEDCOM data, family trees, ancestry, genealogy research, lineage, ancestors, descendants, pedigree charts, family history, heritage, great-grandparents, or wants to look up relatives, trace family connections, find out "who were my relatives", or correct/update genealogical records. Also trigger when the user has a .ged file open or referenced in conversation and asks questions about people, families, dates, or relationships — even if they don't say "genealogy" explicitly. Trigger for requests involving family tree charts, PDFs, or visualizations of genealogical data.
-compatibility: Requires uv and Gramps (or Docker). Uses Bash, Read, and Write tools.
+compatibility: Requires uv and native Gramps. Uses Bash, Read, and Write tools.
 ---
 
 # Genealogy Skill

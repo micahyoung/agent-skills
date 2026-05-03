@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate Gramps reports from GEDCOM files (local install preferred, Docker fallback)."""
+"""Generate Gramps reports from GEDCOM files."""
 
 import argparse
 import os
@@ -52,7 +52,7 @@ for handle in db.get_person_handles():
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Run a Gramps report (local install preferred, Docker fallback).",
+        description="Run a Gramps report.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""\
 output formats (-f):
@@ -139,7 +139,7 @@ examples:
   # Fan chart as SVG:
   %(prog)s -i family.ged -o fan.svg -f svg -r fan_chart -p I123
 
-  # List available filter values for a report (requires docker):
+  # List available filter values for a report:
   # gramps -O tree -a report -p "name=rel_graph,pid=I123,show=filter"
 """
     )

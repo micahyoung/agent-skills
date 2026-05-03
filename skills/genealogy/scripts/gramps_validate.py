@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate a GEDCOM file using Gramps (local install preferred, Docker fallback)."""
+"""Validate a GEDCOM file using Gramps."""
 
 import argparse
 import json
@@ -169,7 +169,7 @@ def _print_json(issues: list[dict], show_noise: bool) -> int:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Validate a GEDCOM file using Gramps (local install preferred, Docker fallback).",
+        description="Validate a GEDCOM file using Gramps.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""\
 exit codes:

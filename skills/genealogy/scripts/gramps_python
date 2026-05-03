@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Gramps Python interpreter wrapper.
 
-Acts like a python interpreter that can import the Gramps libraries.
-Prefers native Gramps + Python 3.13 on macOS, falls back to Docker.
+Acts like a python interpreter that can import the Gramps libraries
+using the native macOS Gramps app bundle.
 
 Usage:
     gramps_python -c "code"
@@ -15,7 +15,7 @@ import sys
 
 # Allow importing sibling _gramps_backend
 sys.path.insert(0, os.path.dirname(__file__))
-from _gramps_backend import DOCKER_IMAGE, find_gramps_app_resources
+from _gramps_backend import find_gramps_app_resources
 
 #: Candidate paths for Python 3.13, checked in order.
 _PYTHON313_CANDIDATES = (
@@ -64,30 +64,6 @@ def _run_native(python_path: str, user_args: list[str]) -> None:
     os.execve(python_path, [python_path] + user_args, env)
 
 
-def _run_docker(user_args: list[str]) -> None:
-    cwd = os.getcwd()
-
-    docker_flags = ["--rm"]
-    if sys.stdin.isatty():
-        docker_flags.append("-t")
-    if not sys.stdin.isatty() or len(user_args) == 0:
-        docker_flags.append("-i")
-
-    cmd = (
-        ["docker", "run"]
-        + docker_flags
-        + [
-            "-v", f"{cwd}:/data",
-            "-w", "/data",
-            "--entrypoint", "python3",
-            DOCKER_IMAGE,
-        ]
-        + user_args
-    )
-
-    os.execvp("docker", cmd)
-
-
 def main() -> None:
     user_args = sys.argv[1:]
 
@@ -95,18 +71,14 @@ def main() -> None:
     if python_path and find_gramps_app_resources():
         _run_native(python_path, user_args)
     else:
-        if not shutil.which("docker"):
-            print(
-                "Error: Gramps Python not available.\n\n"
-                "Native mode requires:\n"
-                "  - Gramps app bundle at /Applications/Gramps.app\n"
-                "  - Python 3.13 at /opt/homebrew/bin/python3.13 (or in PATH)\n\n"
-                "Docker fallback requires:\n"
-                "  - Docker installed and the daemon running\n",
-                file=sys.stderr,
-            )
-            sys.exit(1)
-        _run_docker(user_args)
+        print(
+            "Error: Gramps Python not available.\n\n"
+            "Requires:\n"
+            "  - Gramps app bundle at /Applications/Gramps.app\n"
+            "  - Python 3.13 at /opt/homebrew/bin/python3.13 (or in PATH)\n",
+            file=sys.stderr,
+        )
+        sys.exit(1)
 
 
 if __name__ == "__main__":

@@ -1,7 +1,4 @@
-"""Shared Gramps invocation helper for genealogy scripts.
-
-Prefers a local Gramps install and falls back to Docker.
-"""
+"""Shared Gramps invocation helper for genealogy scripts."""
 
 import os
 import shlex
@@ -9,7 +6,6 @@ import shutil
 import subprocess
 import sys
 
-DOCKER_IMAGE = "ghcr.io/gramps-project/grampsweb:latest"
 TREE_NAME = "tmp_tree"
 
 #: Candidate paths for a local Gramps binary, checked in order.
@@ -20,8 +16,6 @@ _NATIVE_PATHS = (
 
 
 def _find_gramps_binary() -> str | None:
-    if os.environ.get("USE_GRAMPS_DOCKER"):
-        return None
     for path in _NATIVE_PATHS:
         if path.startswith("/"):
             if os.path.isfile(path) and os.access(path, os.X_OK):
@@ -47,28 +41,20 @@ def find_gramps_app_resources() -> tuple[str, str] | None:
 
 
 def run_gramps(shell_script: str, input_dir: str | None = None) -> subprocess.CompletedProcess:
-    """Run a bash script using Gramps natively if available, otherwise via Docker."""
+    """Run a bash script using the native Gramps binary."""
     native_binary = _find_gramps_binary()
-    if native_binary:
-        script = shell_script.replace("gramps ", f"{native_binary} ")
-        if input_dir:
-            script = script.replace("/data/", f"{shlex.quote(input_dir)}/")
-        return subprocess.run(
-            ["bash", "-c", script],
-            cwd=input_dir or None,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            text=True,
-        )
-
-    docker_cmd = [
-        "docker", "run", "--rm",
-        *((["-v", f"{input_dir}:/data", "-w", "/data"]) if input_dir else []),
-        "--entrypoint", "",
-        DOCKER_IMAGE,
-        "bash", "-c", shell_script,
-    ]
-    return subprocess.run(docker_cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+    if not native_binary:
+        raise RuntimeError("Gramps not found. Install Gramps natively.")
+    script = shell_script.replace("gramps ", f"{native_binary} ")
+    if input_dir:
+        script = script.replace("/data/", f"{shlex.quote(input_dir)}/")
+    return subprocess.run(
+        ["bash", "-c", script],
+        cwd=input_dir or None,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+    )
 
 
 def run_gramps_or_exit(shell_script: str, input_dir: str, error_msg: str) -> str:
@@ -84,12 +70,13 @@ def run_gramps_or_exit(shell_script: str, input_dir: str, error_msg: str) -> str
 def remove_family_tree(tree_name: str) -> None:
     """Remove a Gramps family tree if it exists (best effort, silent on failure)."""
     native_binary = _find_gramps_binary()
-    if native_binary:
-        cmd = [native_binary, "-y", "-r", tree_name]
-    else:
-        cmd = ["docker", "run", "--rm", DOCKER_IMAGE, "bash", "-c",
-               f"gramps -y -r {tree_name} 2>/dev/null || true"]
+    if not native_binary:
+        return
     try:
-        subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        subprocess.run(
+            [native_binary, "-y", "-r", tree_name],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
     except Exception:
         pass
