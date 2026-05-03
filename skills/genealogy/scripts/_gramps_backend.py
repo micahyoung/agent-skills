@@ -4,6 +4,7 @@ Prefers a local Gramps install and falls back to Docker.
 """
 
 import os
+import shlex
 import shutil
 import subprocess
 import sys
@@ -51,7 +52,7 @@ def run_gramps(shell_script: str, input_dir: str | None = None) -> subprocess.Co
     if native_binary:
         script = shell_script.replace("gramps ", f"{native_binary} ")
         if input_dir:
-            script = script.replace("/data/", f"{input_dir}/")
+            script = script.replace("/data/", f"{shlex.quote(input_dir)}/")
         return subprocess.run(
             ["bash", "-c", script],
             cwd=input_dir or None,
