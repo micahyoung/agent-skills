@@ -3,33 +3,51 @@
 
 import argparse
 import os
+import subprocess
 import sys
 
 from _gramps_backend import TREE_NAME, remove_family_tree, run_gramps, run_gramps_or_exit
 
 
 def list_people(input_file):
-    """Import GEDCOM into Gramps and list all people with Gramps IDs."""
+    """Import GEDCOM into Gramps and list all people with Gramps IDs.
+
+    Uses gramps_python (our bundled interpreter) to access the Gramps Python API,
+    since the Gramps CLI -e export only exports Places, not People.
+    """
     input_path = os.path.abspath(input_file)
     if not os.path.isfile(input_path):
         print(f"Error: input file not found: {input_path}", file=sys.stderr)
         sys.exit(1)
 
-    # Ensure clean slate by removing any existing tmp_tree
-    remove_family_tree(TREE_NAME)
+    # Find the gramps_python interpreter sibling to this script
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    gramps_python = os.path.join(script_dir, "gramps_python")
 
-    input_dir = os.path.dirname(input_path)
-    input_name = os.path.basename(input_path)
-    csv_name = "_gramps_people.csv"
+    python_code = f'''
+from gramps.gen.db.utils import import_as_dict
+from gramps.cli.user import User
+db = import_as_dict({input_path!r}, User())
+for handle in db.get_person_handles():
+    person = db.get_person_from_handle(handle)
+    name = person.get_primary_name()
+    first = name.get_first_name()
+    last = name.get_surname()
+    gramps_id = person.get_gramps_id()
+    print(f"{{gramps_id}}: {{first}} {{last}}")
+'''
 
-    shell_script = (
-        f"gramps -y -C {TREE_NAME} -i /data/{input_name} -q 2>/dev/null && "
-        f"gramps -O {TREE_NAME} -e /tmp/{csv_name} -f csv -q 2>/dev/null && "
-        f"cat /tmp/{csv_name}"
+    result = subprocess.run(
+        [gramps_python, "-c", python_code],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
     )
-
-    # Print the CSV output (contains Gramps IDs and names)
-    print(run_gramps_or_exit(shell_script, input_dir, "failed to list people from Gramps"))
+    if result.returncode != 0:
+        print(result.stderr, file=sys.stderr)
+        print("Error: failed to list people from Gramps", file=sys.stderr)
+        sys.exit(1)
+    print(result.stdout, end="")
 
 
 def main():

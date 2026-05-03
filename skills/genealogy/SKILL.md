@@ -2,7 +2,7 @@
 name: genealogy
 description: >
   Parse, explore, edit, and generate visual reports from GEDCOM (.ged) genealogy files. Use this skill whenever the user mentions a .ged file, GEDCOM data, family trees, ancestry, genealogy research, lineage, ancestors, descendants, pedigree charts, family history, heritage, great-grandparents, or wants to look up relatives, trace family connections, find out "who were my relatives", or correct/update genealogical records. Also trigger when the user has a .ged file open or referenced in conversation and asks questions about people, families, dates, or relationships — even if they don't say "genealogy" explicitly. Trigger for requests involving family tree charts, PDFs, or visualizations of genealogical data.
-compatibility: Requires uv. Report Mode requires Gramps (local install preferred, Docker fallback). Uses Bash, Read, and Write tools.
+compatibility: Requires uv and Gramps (or Docker). Uses Bash, Read, and Write tools.
 ---
 
 # Genealogy Skill
@@ -19,7 +19,7 @@ Always start in Read Mode unless the user explicitly asks to visualize, validate
 
 ### Scripting with gramps_python
 
-You accomplish most tasks by writing and executing short Python scripts on the fly using the bundled `gramps_python` interpreter. It gives you full access to the Gramps Python libraries and handles the native/Docker setup automatically — no install step needed.
+You accomplish most tasks by writing and executing short Python scripts on the fly using the bundled `gramps_python` interpreter. It gives you full access to the Gramps Python libraries — no install step needed.
 
 Run scripts with:
 ```
@@ -30,7 +30,6 @@ Run scripts with:
 Use `gramps_python` for all Read and Edit mode work. Three additional bundled scripts handle deeper operations:
 - **[./scripts/gramps_validate.py](./scripts/gramps_validate.py)** — validates a GEDCOM file and reports errors/warnings
 - **[./scripts/gramps_report.py](./scripts/gramps_report.py)** — generates graphical reports (pedigree charts, PDFs, etc.)
-- **[./scripts/_gramps_backend.py](./scripts/_gramps_backend.py)** — shared helper (native/Docker detection); not called directly
 
 Run either script with `--help` for full usage. Note: paths are relative to this SKILL.md's directory — use `<skill-dir>/scripts/<script>.py` when constructing commands.
 
@@ -281,7 +280,7 @@ python <skill-dir>/scripts/gramps_validate.py -i path/to/family.ged
 | `-f / --format` | `text` | Output format: `text` or `json` |
 | `--all` | off | Show suppressed noise warnings too |
 
-**Prerequisites:** A local Gramps install is preferred (e.g. `/Applications/Gramps.app` on macOS, or `gramps` in `$PATH` on Linux). Falls back to Docker if Gramps is not found locally.
+**Prerequisites:** Gramps must be available; the script handles setup automatically.
 
 ### Interpreting results
 
@@ -330,7 +329,7 @@ Output structure:
 
 ## Report Mode
 
-Switch to this mode when the user wants a visual report — a pedigree chart, relationship graph, fan chart, descendant tree, or any other graphical output from their GEDCOM data. Report Mode uses the bundled `scripts/gramps_report.py` script, which runs Gramps inside Docker to produce publication-quality reports.
+Switch to this mode when the user wants a visual report — a pedigree chart, relationship graph, fan chart, descendant tree, or any other graphical output from their GEDCOM data. Report Mode uses the bundled `scripts/gramps_report.py` script, which produces publication-quality reports.
 
 ### When to use Report Mode
 
@@ -345,15 +344,12 @@ If the user asks for an ASCII chart or text-based tree, stay in Read Mode and ge
 
 ### Prerequisites
 
-- A local Gramps install is preferred (e.g. `/Applications/Gramps.app` on macOS, or `gramps` in `$PATH` on Linux). Falls back to Docker (`ghcr.io/gramps-project/grampsweb:latest`) if Gramps is not found locally.
+- Gramps must be available; the script handles setup automatically.
 - The output file must be in the **same directory** as the input GEDCOM file.
 
 ### The Report Workflow
 
-1. **Identify the center person**. Most reports require a Gramps `pid`. Gramps assigns its own internal IDs during import, which may differ from the GEDCOM `@XREF@` identifiers. To get the correct Gramps ID:
-   1. First, find the person's name using a Read Mode `gramps_python` script (to confirm you have the right individual).
-   2. Then run `python <skill-dir>/scripts/gramps_report.py --list-people -i file.ged` to see Gramps-assigned IDs alongside names.
-   3. Match by name and use that Gramps ID as the `--pid` value.
+1. **Identify the center person**. Most reports require a Gramps `pid`. Gramps assigns its own internal IDs during import, which may differ from the GEDCOM `@XREF@` identifiers. Run `python <skill-dir>/scripts/gramps_report.py --list-people -i file.ged` to list all people with their Gramps-assigned IDs. Match by name and use that ID as the `--pid` value.
 
 2. **Choose the report type and format**. Match the user's request to one of the available reports:
    - `rel_graph` — Relationship Graph (full or filtered network)
@@ -394,8 +390,8 @@ If the user asks for an ASCII chart or text-based tree, stay in Read Mode and ge
 
 ## Handling Errors Gracefully
 
-- If `import_as_dict` fails due to encoding issues, check that the file is valid UTF-8; some older GEDCOM files use `latin-1` and may need conversion before import
+- If a script fails with an encoding error, the GEDCOM file may not be UTF-8; ask the user about the file's origin or try opening it in a text editor to check
 - If a non-standard tag causes an import warning, it's usually noise (Gramps flags but still imports the file) — check the validation output before assuming data loss
 - If a query returns no results, say so helpfully: "I didn't find anyone with that surname in the file. The surnames present are: Varnell, Decker, Caine..."
 - If asked about relationships the file can't determine (no linking FAM records), explain what's missing rather than guessing
-- If genders appear swapped, you're likely using integer comparison backwards — use `person.get_gender() == Person.MALE` / `== Person.FEMALE` (where MALE=1, FEMALE=0)
+- If genders appear swapped, use `person.get_gender() == Person.MALE` / `== Person.FEMALE` — never compare against raw integers
