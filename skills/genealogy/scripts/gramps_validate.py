@@ -62,13 +62,15 @@ def _parse_verify(text: str) -> list[dict]:
     return issues
 
 
-def validate(input_path: str, input_name: str, input_dir: str) -> tuple[list[dict], list[dict]]:
-    # Ensure clean slate by removing any existing tmp_tree
+def validate(input_path: str) -> tuple[list[dict], list[dict]]:
+    input_dir = os.path.dirname(input_path)
+    input_name = os.path.basename(input_path)
+
     remove_family_tree(TREE_NAME)
 
     shell_script = (
         f"echo '=== IMPORT ===' && "
-        f"gramps -y -C {TREE_NAME} -i /data/{input_name} 2>&1 && "
+        f'gramps -y -C {TREE_NAME} -i "$GRAMPS_WORK_DIR/{input_name}" 2>&1 && '
         f"echo '=== VERIFY ===' && "
         f"gramps -O {TREE_NAME} -a tool -p name=verify 2>&1"
     )
@@ -202,10 +204,7 @@ examples:
         print(f"Error: input file not found: {input_path}", file=sys.stderr)
         sys.exit(1)
 
-    input_dir = os.path.dirname(input_path)
-    input_name = os.path.basename(input_path)
-
-    import_issues, verify_issues = validate(input_path, input_name, input_dir)
+    import_issues, verify_issues = validate(input_path)
     all_issues = import_issues + verify_issues
 
     if args.format == "json":

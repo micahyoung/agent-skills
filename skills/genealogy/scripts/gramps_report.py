@@ -6,7 +6,7 @@ import os
 import subprocess
 import sys
 
-from _gramps_backend import TREE_NAME, remove_family_tree, run_gramps, run_gramps_or_exit
+from _gramps_backend import TREE_NAME, remove_family_tree, run_gramps
 
 
 def list_people(input_file):
@@ -193,12 +193,12 @@ examples:
     remove_family_tree(TREE_NAME)
 
     # Build report options string
-    opts = f"name={args.report},pid={args.pid},off={args.format},of=/data/{output_name}"
+    opts = f"name={args.report},pid={args.pid},off={args.format},of=$GRAMPS_WORK_DIR/{output_name}"
     if args.extra:
         opts += f",{args.extra}"
 
     shell_script = (
-        f"gramps -y -C {TREE_NAME} -i /data/{input_name} -q 2>&1 | tail -2 && "
+        f'gramps -y -C {TREE_NAME} -i "$GRAMPS_WORK_DIR/{input_name}" -q 2>&1 | tail -2 && '
         f'gramps -O {TREE_NAME} -a report -p "{opts}" -q 2>&1'
     )
 
