@@ -15,6 +15,9 @@ _VERIFY_RE = re.compile(r"^([WE]):\s+(.+?),\s+(Person|Family):\s+(\S+),\s+(.+)$"
 # Import warning line: "Tag recognized but not supported  Line N: <tag>"
 _IMPORT_TAG_RE = re.compile(r"Tag recognized but not supported\s+Line\s+(\d+):\s+(.+)")
 _IMPORT_VERS_RE = re.compile(r"GEDCOM version not supported\s+Line\s+(\d+):")
+_IMPORT_NOT_UNDERSTOOD_RE = re.compile(r"Line ignored as not understood\s+Line\s+(\d+):\s+(.+)")
+_IMPORT_IGNORED_RE = re.compile(r"^Line ignored\s*$")
+_IMPORT_ERROR_COUNT_RE = re.compile(r"GEDCOM import report:\s+(\d+)\s+errors? detected")
 
 # Verify warnings that are not meaningful genealogical errors
 _NOISE_MESSAGES = {
@@ -24,6 +27,7 @@ _NOISE_MESSAGES = {
 
 def _parse_import(text: str) -> list[dict]:
     issues = []
+    ignored_count = 0
     for line in text.splitlines():
         m = _IMPORT_TAG_RE.search(line)
         if m:
@@ -42,6 +46,25 @@ def _parse_import(text: str) -> list[dict]:
                 "line": int(m.group(1)), "detail": "GEDCOM version not supported",
                 "noise": True,
             })
+            continue
+        m = _IMPORT_NOT_UNDERSTOOD_RE.search(line)
+        if m:
+            issues.append({
+                "source": "import", "level": "E",
+                "category": "not_understood",
+                "line": int(m.group(1)), "detail": m.group(2).strip(),
+                "noise": False,
+            })
+            continue
+        if _IMPORT_IGNORED_RE.match(line.strip()):
+            ignored_count += 1
+    if ignored_count > 0:
+        issues.append({
+            "source": "import", "level": "E",
+            "category": "line_ignored",
+            "detail": f"{ignored_count} lines ignored during import (structural GEDCOM violations)",
+            "noise": False,
+        })
     return issues
 
 
