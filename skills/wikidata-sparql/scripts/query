@@ -1,0 +1,76 @@
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.12"
+# dependencies = []
+# ///
+
+import argparse
+import json
+import subprocess
+import sys
+
+
+ENDPOINT = "https://query.wikidata.org/sparql"
+
+
+def run_query(sparql: str) -> str:
+    result = subprocess.run(
+        [
+            "curl",
+            "-s",
+            "-H", "Accept: application/sparql-results+json",
+            "--data-urlencode", f"query={sparql}",
+            ENDPOINT,
+        ],
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
+        print(f"curl failed: {result.stderr}", file=sys.stderr)
+        sys.exit(1)
+    return result.stdout
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(
+        description="Query the Wikidata SPARQL endpoint",
+    )
+    parser.add_argument(
+        "-q", "--query",
+        help="SPARQL query string",
+    )
+    parser.add_argument(
+        "-f", "--file",
+        help="Read SPARQL from a file",
+    )
+    args = parser.parse_args()
+
+    if args.file:
+        try:
+            with open(args.file) as fh:
+                sparql = fh.read().strip()
+        except OSError as e:
+            print(f"error reading {args.file}: {e}", file=sys.stderr)
+            sys.exit(1)
+    elif args.query:
+        sparql = args.query
+    else:
+        sparql = sys.stdin.read().strip()
+
+    if not sparql:
+        print("error: no query provided (use -q, -f, or stdin)", file=sys.stderr)
+        sys.exit(1)
+
+    raw = run_query(sparql)
+    try:
+        parsed = json.loads(raw)
+    except json.JSONDecodeError:
+        # might be an error page or non-JSON response — print raw
+        print(raw)
+        return
+
+    print(json.dumps(parsed, indent=2))
+
+
+if __name__ == "__main__":
+    main()

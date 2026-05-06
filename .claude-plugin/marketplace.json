@@ -16,6 +16,15 @@
       "skills": [
         "./skills/genealogy"
       ]
+    },
+    {
+      "name": "wikidata-sparql",
+      "description": "Query Wikidata via the SPARQL endpoint. Use whenever the user wants to find entities (people, films, places), look up Wikidata IDs or properties, disambiguate names, discover relationships between entities, or run knowledge-graph queries.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/wikidata-sparql"
+      ]
     }
   ]
 }
