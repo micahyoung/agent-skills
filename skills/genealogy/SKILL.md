@@ -1,13 +1,13 @@
 ---
 name: genealogy
 description: >
-  Parse, explore, edit, and generate visual reports from GEDCOM (.ged) genealogy files. Use this skill whenever the user mentions a .ged file, GEDCOM data, family trees, ancestry, genealogy research, lineage, ancestors, descendants, pedigree charts, family history, heritage, great-grandparents, or wants to look up relatives, trace family connections, find out "who were my relatives", or correct/update genealogical records. Also trigger when the user has a .ged file open or referenced in conversation and asks questions about people, families, dates, or relationships — even if they don't say "genealogy" explicitly. Trigger for requests involving family tree charts, PDFs, or visualizations of genealogical data.
+  Parse, explore, edit, and generate visual reports from Gramps XML (.gramps) genealogy files. Use this skill whenever the user mentions a .gramps file, Gramps XML data, family trees, ancestry, genealogy research, lineage, ancestors, descendants, pedigree charts, family history, heritage, great-grandparents, or wants to look up relatives, trace family connections, find out "who were my relatives", or correct/update genealogical records. Also trigger when the user has a .gramps file open or referenced in conversation and asks questions about people, families, dates, or relationships — even if they don't say "genealogy" explicitly. Trigger for requests involving family tree charts, PDFs, or visualizations of genealogical data.
 compatibility: Requires uv and native Gramps. Uses Bash, Read, and Write tools.
 ---
 
 # Genealogy Skill
 
-You help users explore and edit GEDCOM 5.5 genealogy files. You have four modes:
+You help users explore and edit Gramps XML (.gramps) genealogy files. You have four modes:
 - **Read Mode** (default)
 - **Edit Mode**
 - **Validation Mode**
@@ -28,23 +28,23 @@ Run scripts with:
 ```
 
 Use `gramps_python` for all Read and Edit mode work. Three additional bundled scripts handle deeper operations:
-- **[./scripts/gramps_validate.py](./scripts/gramps_validate.py)** — validates a GEDCOM file and reports errors/warnings
+- **[./scripts/gramps_validate.py](./scripts/gramps_validate.py)** — validates a Gramps XML file and reports errors/warnings
 - **[./scripts/gramps_report.py](./scripts/gramps_report.py)** — generates graphical reports (pedigree charts, PDFs, etc.)
 
 Run either script with `--help` for full usage. Note: paths are relative to this SKILL.md's directory — use `<skill-dir>/scripts/<script>.py` when constructing commands.
 
-## Finding the GEDCOM File
+## Finding the Gramps XML File
 
 If the user hasn't specified a file path:
 
-1. **Glob for `**/*.ged`** in the working directory
-2. **One file found** → use it, but confirm with the user: "I found `path/to/file.ged` — shall I use that?"
+1. **Glob for `**/*.gramps`** in the working directory
+2. **One file found** → use it, but confirm with the user: "I found `path/to/data.gramps` — shall I use that?"
 3. **Multiple files found** → list them and ask which one to use
-4. **No files found** → ask the user for the path to their GEDCOM file
+4. **No files found** → ask the user for the path to their Gramps XML file
 
 ## Read Mode (default)
 
-This is the primary mode. The user has a .ged file and wants to learn about the people and families in it. Your job is to answer their questions in warm, clear, natural language — like a knowledgeable family historian sitting beside them.
+This is the primary mode. The user has a .gramps file and wants to learn about the people and families in it. Your job is to answer their questions in warm, clear, natural language — like a knowledgeable family historian sitting beside them.
 
 ### Approach
 
@@ -97,7 +97,7 @@ Here's the general shape of a read script (run with `<skill-dir>/scripts/gramps_
 from gramps.gen.db.utils import import_as_dict
 from gramps.cli.user import User
 
-db = import_as_dict("path/to/file.ged", User())
+db = import_as_dict("data.gramps", User())
 
 # Example: find an individual by surname fragment
 for handle in db.get_person_handles():
@@ -164,7 +164,7 @@ Adapt freely. You're writing throwaway scripts to extract exactly what the user 
 
 ## Edit Mode
 
-Switch to this mode only when the user explicitly wants to modify the .ged file — adding people, correcting names/dates, linking families, deleting records, etc.
+Switch to this mode only when the user explicitly wants to modify the .gramps file — adding people, correcting names/dates, linking families, deleting records, etc.
 
 Editing genealogical records is serious business. A wrong edit can propagate confusion through someone's family research. So this mode is deliberate and careful.
 
@@ -173,7 +173,7 @@ Editing genealogical records is serious business. A wrong edit can propagate con
 1. **Understand the change**: Confirm what the user wants to modify. If anything is ambiguous, ask before proceeding.
 
 2. **Show a preview**: Before writing anything, describe the change in plain language:
-   > I'm going to correct the surname on Individual @I5@ from "Smyth" to "Smith". This affects Clayton Rufus Smyth → Clayton Rufus Smith. Want me to go ahead?
+   > I'm going to correct the surname on Clayton Rufus (I0005) from "Smyth" to "Smith". Want me to go ahead?
 
 3. **Wait for confirmation**: Do not write the file until the user says yes.
 
@@ -197,70 +197,52 @@ Editing genealogical records is serious business. A wrong edit can propagate con
 
 - **One logical change at a time**. If the user asks for multiple edits, handle them sequentially with individual confirmations, unless they explicitly say "go ahead and do all of these."
 - **Never delete records without explicit confirmation**, even if the user implies it. Say: "This would remove [person/family] from the file entirely. Are you sure?"
-- **Back up before bulk edits**. If the user asks for sweeping changes (e.g., "fix all the date formats"), save a backup copy first (e.g., `filename_backup_20260315.ged`) and tell them you did.
+- **Back up before bulk edits**. If the user asks for sweeping changes (e.g., "fix all the date formats"), save a backup copy first (e.g., `data_backup_20260617.gramps`) and tell them you did.
 - **Preserve structure**. Don't reorder records unnecessarily. Don't strip existing notes or custom tags unless asked.
 
 ### Python scripting patterns for Edit Mode
 
-For edits, work at the text level — read the file as lines, modify, write back, then re-parse with Gramps as a sanity check. Run with `<skill-dir>/scripts/gramps_python script.py`.
+For edits, use the Gramps API — import with `import_as_dict`, modify objects in memory using `DbTxn`, then serialize back with `GrampsXmlWriter`. Run with `<skill-dir>/scripts/gramps_python script.py`.
 
 ```python
+from gramps.gen.db.utils import import_as_dict
+from gramps.cli.user import User
+from gramps.gen.db import DbTxn
+from gramps.plugins.export.exportxml import GrampsXmlWriter
+from gramps.gen.lib import Note, NoteType
 import datetime
 
-filepath = "path/to/file.ged"
-target_xref = "@I5@"
+filepath = "data.gramps"
+db = import_as_dict(filepath, User())
 
-# Read the file as lines for text-level editing
-with open(filepath, "r", encoding="utf-8") as f:
-    lines = f.readlines()
+# Locate target person, make changes to the object...
 
-today = datetime.date.today().isoformat()
-new_lines = []
-in_target = False
-found = False
+# Changelog note — add as a linked Gramps Note object
+note = Note()
+note.set_type(NoteType.GENERAL)
+note.set(f"[CHANGELOG] {datetime.date.today().isoformat()}: Updated occupation from "
+         f"'Student, Millhaven Middle School' to 'Foreman, Millhaven Grain Processing' "
+         f"(source: per family member correction March 2026)")
 
-for line in lines:
-    stripped = line.strip()
+with DbTxn("Update Clay's occupation", db) as txn:
+    db.add_note(note, txn)
+    person.add_note(note.handle)
+    db.commit_person(person, txn)
 
-    # Detect when we enter/leave the target individual record
-    if stripped.startswith("0") and target_xref in stripped and "INDI" in stripped:
-        in_target = True
-    elif stripped.startswith("0") and in_target:
-        in_target = False
-
-    # Replace an OCCU field within the target individual
-    if in_target and stripped.startswith("1 OCCU"):
-        new_lines.append("1 OCCU Foreman, Millhaven Grain Processing\n")
-        new_lines.append(f"1 NOTE [CHANGELOG] {today}: Updated occupation from "
-                         f"'{stripped[7:]}' to 'Foreman, Millhaven Grain Processing' "
-                         f"(source: per family member correction)\n")
-        found = True
-        continue
-
-    new_lines.append(line)
-
-if found:
-    with open(filepath, "w", encoding="utf-8") as f:
-        f.writelines(new_lines)
-    # Sanity check: re-parse with Gramps to confirm the file is still valid
-    from gramps.gen.db.utils import import_as_dict
-    from gramps.cli.user import User
-    db = import_as_dict(filepath, User())
-    print(f"Edit applied and file re-parsed successfully ({db.get_number_of_people()} people).")
-else:
-    print(f"Warning: OCCU field not found for {target_xref}")
+GrampsXmlWriter(db, compress=0, user=User()).write(filepath)
+print(f"Saved. {db.get_number_of_people()} people in file.")
 ```
 
-This text-level approach gives full control over field edits and changelog notes. Always re-parse the output file as a sanity check after writing.
+Always use `DbTxn` to wrap all write operations, and re-serialize with `GrampsXmlWriter` after editing.
 
 ## Validation Mode
 
-Switch to this mode when the user wants to check their GEDCOM file for errors, data quality issues, or structural problems.
+Switch to this mode when the user wants to check their Gramps XML file for errors, data quality issues, or structural problems.
 
 ### When to use Validation Mode
 
 Trigger when the user asks:
-- "Validate my GEDCOM", "Check for errors", "What's wrong with my file?"
+- "Validate my file", "Check for errors", "What's wrong with my file?"
 - "Find data quality issues", "Are there any problems in the file?"
 - "Run a health check on my family tree"
 
@@ -269,14 +251,14 @@ Trigger when the user asks:
 Run the bundled `scripts/gramps_validate.py` script:
 
 ```bash
-python <skill-dir>/scripts/gramps_validate.py -i path/to/family.ged
+python <skill-dir>/scripts/gramps_validate.py -i path/to/data.gramps
 ```
 
 **Options:**
 
 | Flag | Default | Description |
 |------|---------|-------------|
-| `-i / --input` | required | GEDCOM file path |
+| `-i / --input` | required | Gramps XML file path |
 | `-f / --format` | `text` | Output format: `text` or `json` |
 | `--all` | off | Show suppressed noise warnings too |
 
@@ -285,7 +267,7 @@ python <skill-dir>/scripts/gramps_validate.py -i path/to/family.ged
 ### Interpreting results
 
 The script runs two Gramps phases:
-1. **Import** — catches spec violations (unsupported tags, invalid GEDCOM version)
+1. **Import** — catches structural problems loading the Gramps XML file
 2. **Verify** — catches semantic issues (invalid dates, out-of-order births, age anomalies)
 
 **Error levels:**
@@ -293,8 +275,6 @@ The script runs two Gramps phases:
 - `W` (warning) — possible issue; may be legitimate (e.g. large age gap between siblings)
 
 **Noise filtering:** By default, low-signal issues are suppressed:
-- `"Tag recognized but not supported"` — Geni.com `EMAIL`/`PHON` extensions, not real errors
-- `"GEDCOM version not supported"` — spec version mismatch, harmless
 - `"Husband and wife with the same surname"` — coincidental surname match, rarely meaningful
 
 Use `--all` to see the full unfiltered output.
@@ -311,13 +291,13 @@ For any real errors found, switch to Edit Mode to fix them. Common fixes:
 ### JSON output for programmatic use
 
 ```bash
-python <skill-dir>/scripts/gramps_validate.py -i family.ged -f json
+python <skill-dir>/scripts/gramps_validate.py -i data.gramps -f json
 ```
 
 Output structure:
 ```json
 {
-  "summary": {"errors": 3, "warnings": 2, "noise_suppressed": 187},
+  "summary": {"errors": 3, "warnings": 2, "noise_suppressed": 0},
   "errors": [
     {"source": "verify", "level": "E", "record_type": "Person",
      "record_id": "IJANPETERRYNDERS", "record_name": "Rynders, Jan Peter",
@@ -329,7 +309,7 @@ Output structure:
 
 ## Report Mode
 
-Switch to this mode when the user wants a visual report — a pedigree chart, relationship graph, fan chart, descendant tree, or any other graphical output from their GEDCOM data. Report Mode uses the bundled `scripts/gramps_report.py` script, which produces publication-quality reports.
+Switch to this mode when the user wants a visual report — a pedigree chart, relationship graph, fan chart, descendant tree, or any other graphical output from their genealogy data. Report Mode uses the bundled `scripts/gramps_report.py` script, which produces publication-quality reports.
 
 ### When to use Report Mode
 
@@ -345,11 +325,11 @@ If the user asks for an ASCII chart or text-based tree, stay in Read Mode and ge
 ### Prerequisites
 
 - Gramps must be available; the script handles setup automatically.
-- The output file must be in the **same directory** as the input GEDCOM file.
+- The output file must be in the **same directory** as the input Gramps XML file.
 
 ### The Report Workflow
 
-1. **Identify the center person**. Most reports require a Gramps `pid`. Gramps assigns its own internal IDs during import, which may differ from the GEDCOM `@XREF@` identifiers. Run `python <skill-dir>/scripts/gramps_report.py --list-people -i file.ged` to list all people with their Gramps-assigned IDs. Match by name and use that ID as the `--pid` value.
+1. **Identify the center person**. Most reports require a Gramps `pid`. Gramps assigns its own internal person IDs. Run `python <skill-dir>/scripts/gramps_report.py --list-people -i data.gramps` to list all people with their Gramps-assigned IDs. Match by name and use that ID as the `--pid` value.
 
 2. **Choose the report type and format**. Match the user's request to one of the available reports:
    - `rel_graph` — Relationship Graph (full or filtered network)
@@ -368,7 +348,7 @@ If the user asks for an ASCII chart or text-based tree, stay in Read Mode and ge
 3. **Run the script**:
    ```bash
    python <skill-dir>/scripts/gramps_report.py \
-     -i path/to/family.ged \
+     -i path/to/data.gramps \
      -o path/to/output.pdf \
      -f pdf \
      -r rel_graph \
@@ -390,8 +370,8 @@ If the user asks for an ASCII chart or text-based tree, stay in Read Mode and ge
 
 ## Handling Errors Gracefully
 
-- If a script fails with an encoding error, the GEDCOM file may not be UTF-8; ask the user about the file's origin or try opening it in a text editor to check
-- If a non-standard tag causes an import warning, it's usually noise (Gramps flags but still imports the file) — check the validation output before assuming data loss
+- If a script fails with an XML parse error, the .gramps file may be corrupted — verify the file starts with valid XML
+- If import returns an unexpected error, run gramps_validate.py on the file to get a structured report
 - If a query returns no results, say so helpfully: "I didn't find anyone with that surname in the file. The surnames present are: Varnell, Decker, Caine..."
-- If asked about relationships the file can't determine (no linking FAM records), explain what's missing rather than guessing
+- If asked about relationships the file can't determine (no linking family records), explain what's missing rather than guessing
 - If genders appear swapped, use `person.get_gender() == Person.MALE` / `== Person.FEMALE` — never compare against raw integers

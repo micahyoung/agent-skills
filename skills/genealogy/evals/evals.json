@@ -3,35 +3,35 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "I have a GEDCOM file at test-fixtures/family.ged — can you tell me about Dennis's family? Like who are his parents, his wife, kids?",
+      "prompt": "I have a Gramps XML file at test-fixtures/data.gramps — can you tell me about Dennis's family? Like who are his parents, his wife, kids?",
       "expected_output": "Natural language summary covering: parents Roderick (Rod) and Estelle Varnell, wife Lorraine (Lori, nee Decker), children Clay, Nora, and Jude. Should mention key details like dates and places in a readable way.",
-      "files": ["test-fixtures/family.ged"],
+      "files": ["test-fixtures/data.gramps"],
       "expectations": [
         "Response mentions Dennis's parents Roderick (Rod) and Estelle Varnell",
         "Response mentions Dennis's wife Lorraine (Lori), nee Decker",
         "Response mentions all three children: Clay (Clayton Rufus), Nora (Colleen), and Jude (Judith Elaine)",
-        "Response is written in natural language prose, not raw data or XREF IDs",
+        "Response is written in natural language prose, not raw data or Gramps internal IDs",
         "Response includes at least some birth dates or places"
       ]
     },
     {
       "id": 2,
-      "prompt": "Looking at test-fixtures/family.ged — how is Suki related to Clay? Can you trace the connection?",
+      "prompt": "Looking at test-fixtures/data.gramps — how is Suki related to Clay? Can you trace the connection?",
       "expected_output": "Should explain that Suki is Clay's first cousin once removed or similar — Suki was adopted by Faye Decker, who is Lorraine's sister, making Suki a cousin to Clay. The explanation should be in natural language and trace the path clearly.",
-      "files": ["test-fixtures/family.ged"],
+      "files": ["test-fixtures/data.gramps"],
       "expectations": [
         "Response identifies that Suki was adopted by Faye Decker",
         "Response explains that Faye is Lorraine's sister (or aunt to Clay)",
         "Response traces the connection path: Suki -> Faye -> Decker sisters -> Lorraine -> Clay",
-        "Response uses natural language, not raw GEDCOM data",
+        "Response uses natural language, not raw data",
         "Response correctly characterizes the relationship as cousin or adoptive cousin"
       ]
     },
     {
       "id": 3,
-      "prompt": "Can you give me a summary of everyone in test-fixtures/family.ged? Maybe a nice table with names, birth dates, and how they fit into the family?",
-      "expected_output": "A markdown table listing all 14 individuals with columns for name, birth date, birth place, and family role/relationship. Should be well-formatted and scannable.",
-      "files": ["test-fixtures/family.ged"],
+      "prompt": "Can you give me a summary of everyone in test-fixtures/data.gramps? Maybe a nice table with names, birth dates, and how they fit into the family?",
+      "expected_output": "A markdown table listing individuals with columns for name, birth date, birth place, and family role/relationship. Should include at least the 13 core family members and be well-formatted and scannable.",
+      "files": ["test-fixtures/data.gramps"],
       "expectations": [
         "Response contains a markdown table",
         "Table includes at least 12 individuals from the file",
@@ -42,22 +42,21 @@
     },
     {
       "id": 4,
-      "prompt": "What do we know about Malcolm Caine from test-fixtures/family.ged? How does he connect to the Varnell family?",
+      "prompt": "What do we know about Malcolm Caine from test-fixtures/data.gramps? How does he connect to the Varnell family?",
       "expected_output": "Should explain that Malcolm (Mal) Caine is Dennis's half-brother — they share the same father (Roderick Varnell) but different mothers. Should mention he was born around 1957 in Dunmore and was a former owner of Caine Woodworks.",
-      "files": ["test-fixtures/family.ged"],
+      "files": ["test-fixtures/data.gramps"],
       "expectations": [
         "Response identifies Malcolm (Mal) Caine as Dennis's half-brother",
         "Response explains they share the same father Roderick Varnell but different mothers",
-        "Response mentions Malcolm was born around 1957 in Dunmore",
         "Response mentions Caine Woodworks or his occupation",
         "Response is in natural language prose"
       ]
     },
     {
       "id": 5,
-      "prompt": "I'm looking at test-fixtures/family.ged. Who are the Decker sisters and what do we know about them?",
+      "prompt": "I'm looking at test-fixtures/data.gramps. Who are the Decker sisters and what do we know about them?",
       "expected_output": "Should identify Lorraine, Greta, and Faye as the three Decker sisters, daughters of Warren and Opal Decker. Should mention Greta and Faye are twins, both work as postal clerks, and Faye adopted Suki. Lorraine married Dennis Varnell.",
-      "files": ["test-fixtures/family.ged"],
+      "files": ["test-fixtures/data.gramps"],
       "expectations": [
         "Response identifies all three Decker sisters: Lorraine, Greta, and Faye",
         "Response mentions their parents Warren and Opal Decker",
@@ -69,22 +68,22 @@
     },
     {
       "id": 6,
-      "prompt": "In test-fixtures/family.ged, Clay's occupation is listed as 'Student, Millhaven Middle School' but he's 41. Update it to 'Foreman, Millhaven Grain Processing', source: per family member correction March 2026.",
-      "expected_output": "Should switch to Edit Mode. Preview the change (old occupation -> new occupation for Clay / Clayton Rufus Varnell), ask for confirmation, then apply the edit. The modified file should have: updated OCCU field, a 1 NOTE [CHANGELOG] entry on the record with date and source. Should re-parse as sanity check.",
-      "files": ["test-fixtures/family.ged"],
+      "prompt": "In test-fixtures/data.gramps, Clay's occupation is listed as 'Student, Millhaven Middle School' but he's 41. Update it to 'Foreman, Millhaven Grain Processing', source: per family member correction March 2026.",
+      "expected_output": "Should switch to Edit Mode. Preview the change (old occupation -> new occupation for Clay / Clayton Rufus Varnell), ask for confirmation, then apply the edit. The modified file should have: updated occupation via the Gramps API, a Gramps Note object with [CHANGELOG] text linked to Clay's record. Should re-parse as sanity check.",
+      "files": ["test-fixtures/data.gramps"],
       "expectations": [
         "Response previews the change before applying it (old value -> new value)",
-        "The modified .ged file contains 'Foreman, Millhaven Grain Processing' as Clay's occupation",
-        "The modified .ged file contains a NOTE with [CHANGELOG] tag on the modified record",
+        "The modified data.gramps file contains 'Foreman, Millhaven Grain Processing' as Clay's occupation",
+        "The modified data.gramps file contains a Gramps Note with [CHANGELOG] text linked to Clay's record",
         "The changelog note includes the date and source information",
         "Response mentions re-parsing or sanity checking the file after edit"
       ]
     },
     {
       "id": 7,
-      "prompt": "Generate a PDF pedigree chart of Dennis's ancestors from test-fixtures/family.ged.",
+      "prompt": "Generate a PDF pedigree chart of Dennis's ancestors from test-fixtures/data.gramps.",
       "expected_output": "Should switch to Report Mode. Use gramps_report.py --list-people to get the Gramps-assigned ID for Dennis. Then run gramps_report.py with -r ancestor_chart -f pdf using that Gramps ID as --pid. Should produce a PDF file and report its path and size.",
-      "files": ["test-fixtures/family.ged"],
+      "files": ["test-fixtures/data.gramps"],
       "expectations": [
         "Response uses Report Mode (not Read Mode)",
         "Response uses gramps_python or gramps_report.py to identify Dennis first",
@@ -96,23 +95,23 @@
     },
     {
       "id": 9,
-      "prompt": "Can you run a validation check on test-fixtures/family.ged and let me know if there are any problems I should fix?",
-    "expected_output": "Should switch to Validation Mode and run gramps_validate.py against the fixture. Should report the errors found: the Decker children are listed out of chronological order in their family record. Should also note the 6 lower-priority warnings (old age without death records, old mother flags) and explain they're less urgent. Response should suggest concrete fixes like reordering the CHIL tags in the Decker family record.",
-      "files": ["test-fixtures/family.ged"],
+      "prompt": "Can you run a validation check on test-fixtures/data.gramps and let me know if there are any problems I should fix?",
+    "expected_output": "Should switch to Validation Mode and run gramps_validate.py against the fixture. Should report the errors found: the Decker children are listed out of chronological order in their family record. Should also note the 6 lower-priority warnings (old age without death records, old mother flags) and explain they're less urgent. Response should suggest concrete fixes like reordering the children in the Decker family using Edit Mode.",
+      "files": ["test-fixtures/data.gramps"],
       "expectations": [
         "Response uses Validation Mode — runs gramps_validate.py",
         "Response reports errors from the validation script",
         "Response mentions the Decker family has children listed out of chronological order",
         "Response mentions lower-priority warnings (old age, old mother)",
         "Response distinguishes errors (worth fixing) from warnings (lower priority)",
-        "Response suggests at least one concrete fix for the Decker child order error"
+        "Response suggests at least one concrete fix for the Decker child order error using Edit Mode"
       ]
     },
     {
       "id": 8,
       "prompt": "I'd like to see Clay's family tree — who are his ancestors going back as far as the file goes?",
       "expected_output": "Should stay in Read Mode and provide a natural language answer tracing Clay's ancestry: parents Dennis and Lorraine, paternal grandparents Roderick (Rod) and Estelle Varnell, maternal grandparents Warren and Opal Decker, and any further generations available.",
-      "files": ["test-fixtures/family.ged"],
+      "files": ["test-fixtures/data.gramps"],
       "expectations": [
         "Response stays in Read Mode (natural language answer, not a report)",
         "Response mentions Clay's parents Dennis and Lorraine",

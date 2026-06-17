@@ -5,12 +5,12 @@
   },
   "metadata": {
     "description": "Community skills marketplace for Claude Code",
-    "version": "1.0.7"
+    "version": "2.0.0"
   },
   "plugins": [
     {
       "name": "genealogy",
-      "description": "Parse, explore, and edit GEDCOM (.ged) genealogy files. Use this skill whenever the user mentions a .ged file, GEDCOM data, family trees, ancestry, genealogy research, lineage, ancestors, descendants, pedigree charts, or wants to look up relatives, trace family connections, or correct/update genealogical records.",
+      "description": "Parse, explore, and edit Gramps XML (.gramps) genealogy files. Use this skill whenever the user mentions a .gramps file, Gramps XML data, family trees, ancestry, genealogy research, lineage, ancestors, descendants, pedigree charts, or wants to look up relatives, trace family connections, or correct/update genealogical records.",
       "source": "./",
       "strict": false,
       "skills": [

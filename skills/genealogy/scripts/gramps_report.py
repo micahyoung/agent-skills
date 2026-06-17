@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate Gramps reports from GEDCOM files."""
+"""Generate Gramps reports from Gramps XML files."""
 
 import argparse
 import os
@@ -10,10 +10,9 @@ from _gramps_backend import TREE_NAME, remove_family_tree, run_gramps
 
 
 def list_people(input_file):
-    """Import GEDCOM into Gramps and list all people with Gramps IDs.
+    """Import a Gramps XML file and list all people with Gramps IDs.
 
-    Uses gramps_python (our bundled interpreter) to access the Gramps Python API,
-    since the Gramps CLI -e export only exports Places, not People.
+    Uses gramps_python (our bundled interpreter) to access the Gramps Python API.
     """
     input_path = os.path.abspath(input_file)
     if not os.path.isfile(input_path):
@@ -128,23 +127,23 @@ extra report options (-e), passed as comma-separated key=value pairs:
 
 examples:
   # Relationship graph as PDF, filtered to descendant families:
-  %(prog)s -i family.ged -o out.pdf -f pdf -r rel_graph -p I123 -e "filter=2"
+  %(prog)s -i data.gramps -o out.pdf -f pdf -r rel_graph -p I123 -e "filter=2"
 
   # Ancestor pedigree chart with 6 generations:
-  %(prog)s -i family.ged -o ancestors.pdf -f pdf -r ancestor_chart -p I123 -e "maxgen=6"
+  %(prog)s -i data.gramps -o ancestors.pdf -f pdf -r ancestor_chart -p I123 -e "maxgen=6"
 
   # High-res PNG of full database graph:
-  %(prog)s -i family.ged -o full.png -f png -r rel_graph -p I123 -e "filter=0,dpi=300"
+  %(prog)s -i data.gramps -o full.png -f png -r rel_graph -p I123 -e "filter=0,dpi=300"
 
   # Fan chart as SVG:
-  %(prog)s -i family.ged -o fan.svg -f svg -r fan_chart -p I123
+  %(prog)s -i data.gramps -o fan.svg -f svg -r fan_chart -p I123
 
   # List available filter values for a report:
   # gramps -O tree -a report -p "name=rel_graph,pid=I123,show=filter"
 """
     )
     parser.add_argument("-i", "--input", required=True,
-                        help="Input GEDCOM file (e.g. family.ged)")
+                        help="Input Gramps XML file (e.g. data.gramps)")
     parser.add_argument("-o", "--output",
                         help="Output file (e.g. family.pdf)")
     parser.add_argument("-f", "--format",
@@ -159,7 +158,7 @@ examples:
     )
     parser.add_argument(
         "--list-people", action="store_true",
-        help="Import the GEDCOM into Gramps and list all people with their Gramps IDs, then exit"
+        help="Import the Gramps XML file and list all people with their Gramps IDs, then exit"
     )
     args = parser.parse_args()
 

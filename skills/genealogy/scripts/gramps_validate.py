@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate a GEDCOM file using Gramps."""
+"""Validate a Gramps XML file using Gramps."""
 
 import argparse
 import json
@@ -12,13 +12,6 @@ from _gramps_backend import TREE_NAME, remove_family_tree, run_gramps
 # Verify output line: "W: <message>, Person: <ID>, <Name>"
 _VERIFY_RE = re.compile(r"^([WE]):\s+(.+?),\s+(Person|Family):\s+(\S+),\s+(.+)$")
 
-# Import warning line: "Tag recognized but not supported  Line N: <tag>"
-_IMPORT_TAG_RE = re.compile(r"Tag recognized but not supported\s+Line\s+(\d+):\s+(.+)")
-_IMPORT_VERS_RE = re.compile(r"GEDCOM version not supported\s+Line\s+(\d+):")
-_IMPORT_NOT_UNDERSTOOD_RE = re.compile(r"Line ignored as not understood\s+Line\s+(\d+):\s+(.+)")
-_IMPORT_IGNORED_RE = re.compile(r"^Line ignored\s*$")
-_IMPORT_ERROR_COUNT_RE = re.compile(r"GEDCOM import report:\s+(\d+)\s+errors? detected")
-
 # Verify warnings that are not meaningful genealogical errors
 _NOISE_MESSAGES = {
     "Husband and wife with the same surname",
@@ -27,44 +20,13 @@ _NOISE_MESSAGES = {
 
 def _parse_import(text: str) -> list[dict]:
     issues = []
-    ignored_count = 0
     for line in text.splitlines():
-        m = _IMPORT_TAG_RE.search(line)
-        if m:
-            issues.append({
-                "source": "import", "level": "W",
-                "category": "unsupported_tag",
-                "line": int(m.group(1)), "detail": m.group(2).strip(),
-                "noise": True,
-            })
-            continue
-        m = _IMPORT_VERS_RE.search(line)
-        if m:
-            issues.append({
-                "source": "import", "level": "W",
-                "category": "gedcom_version",
-                "line": int(m.group(1)), "detail": "GEDCOM version not supported",
-                "noise": True,
-            })
-            continue
-        m = _IMPORT_NOT_UNDERSTOOD_RE.search(line)
-        if m:
+        if "error" in line.lower() and not line.strip().startswith("00%"):
             issues.append({
                 "source": "import", "level": "E",
-                "category": "not_understood",
-                "line": int(m.group(1)), "detail": m.group(2).strip(),
+                "detail": line.strip(),
                 "noise": False,
             })
-            continue
-        if _IMPORT_IGNORED_RE.match(line.strip()):
-            ignored_count += 1
-    if ignored_count > 0:
-        issues.append({
-            "source": "import", "level": "E",
-            "category": "line_ignored",
-            "detail": f"{ignored_count} lines ignored during import (structural GEDCOM violations)",
-            "noise": False,
-        })
     return issues
 
 
@@ -124,10 +86,8 @@ def _print_text(issues: list[dict], show_noise: bool, input_path: str) -> int:
     warnings = [i for i in visible if i["level"] == "W"]
 
     # Noise breakdown for suppressed message
-    noise_tags = sum(1 for i in suppressed if i.get("category") == "unsupported_tag")
-    noise_vers = sum(1 for i in suppressed if i.get("category") == "gedcom_version")
     noise_surname = sum(1 for i in suppressed if i.get("message") == "Husband and wife with the same surname")
-    noise_other = len(suppressed) - noise_tags - noise_vers - noise_surname
+    noise_other = len(suppressed) - noise_surname
 
     print(f"\nValidating: {input_path}\n")
 
@@ -156,10 +116,6 @@ def _print_text(issues: list[dict], show_noise: bool, input_path: str) -> int:
     if suppressed:
         print()
         parts = []
-        if noise_tags:
-            parts.append(f"{noise_tags} unsupported-tag import warning{'s' if noise_tags != 1 else ''}")
-        if noise_vers:
-            parts.append(f"{noise_vers} GEDCOM-version warning{'s' if noise_vers != 1 else ''}")
         if noise_surname:
             parts.append(f"{noise_surname} same-surname warning{'s' if noise_surname != 1 else ''}")
         if noise_other:
@@ -194,7 +150,7 @@ def _print_json(issues: list[dict], show_noise: bool) -> int:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Validate a GEDCOM file using Gramps.",
+        description="Validate a Gramps XML file using Gramps.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""\
 exit codes:
@@ -203,19 +159,17 @@ exit codes:
 
 noise filtering:
   By default, low-signal issues are suppressed from output:
-    - "Tag recognized but not supported" (EMAIL/PHON Geni.com extensions)
-    - "GEDCOM version not supported" (spec version mismatch)
     - "Husband and wife with the same surname" (coincidental, not an error)
   Use --all to include them.
 
 examples:
-  %(prog)s -i family.ged
-  %(prog)s -i family.ged -f json
-  %(prog)s -i family.ged --all
+  %(prog)s -i data.gramps
+  %(prog)s -i data.gramps -f json
+  %(prog)s -i data.gramps --all
 """
     )
     parser.add_argument("-i", "--input", required=True,
-                        help="Input GEDCOM file (e.g. family.ged)")
+                        help="Input Gramps XML file (e.g. data.gramps)")
     parser.add_argument("-f", "--format", choices=["text", "json"], default="text",
                         help="Output format: text (default) or json")
     parser.add_argument("--all", action="store_true",
