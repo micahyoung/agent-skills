@@ -209,6 +209,7 @@ from gramps.gen.db.utils import import_as_dict
 from gramps.cli.user import User
 from gramps.gen.db import DbTxn
 from gramps.plugins.export.exportxml import GrampsXmlWriter
+from gramps.version import VERSION
 from gramps.gen.lib import Note, NoteType
 import datetime
 
@@ -229,7 +230,7 @@ with DbTxn("Update Clay's occupation", db) as txn:
     person.add_note(note.handle)
     db.commit_person(person, txn)
 
-GrampsXmlWriter(db, compress=0, user=User()).write(filepath)
+GrampsXmlWriter(db, compress=0, version=VERSION, user=User()).write(filepath)
 print(f"Saved. {db.get_number_of_people()} people in file.")
 ```
 
