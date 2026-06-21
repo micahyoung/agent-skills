@@ -96,6 +96,7 @@ Here's the general shape of a read script (run with `<skill-dir>/scripts/gramps_
 ```python
 from gramps.gen.db.utils import import_as_dict
 from gramps.cli.user import User
+from gramps.gen.datehandler import displayer as date_displayer
 
 db = import_as_dict("data.gramps", User())
 
@@ -111,7 +112,7 @@ for handle in db.get_person_handles():
         birth_date = birth_place = ""
         if birth_ref:
             birth_event = db.get_event_from_handle(birth_ref.ref)
-            birth_date = birth_event.get_date_object().get_text()
+            birth_date = date_displayer.display(birth_event.get_date_object())
             place_h = birth_event.get_place_handle()
             if place_h:
                 birth_place = db.get_place_from_handle(place_h).get_title()
@@ -147,7 +148,7 @@ for fam_handle in person.get_parent_family_handle_list():
 |---|---|
 | All people | `db.get_person_handles()` → `db.get_person_from_handle(h)` |
 | Name | `person.get_primary_name().get_first_name()` / `.get_surname()` |
-| Birth date | `db.get_event_from_handle(person.get_birth_ref().ref).get_date_object().get_text()` |
+| Birth date | `date_displayer.display(db.get_event_from_handle(person.get_birth_ref().ref).get_date_object())` (import `displayer as date_displayer` from `gramps.gen.datehandler`; `.get_text()` returns `""` for all structured dates) |
 | Birth place | `db.get_place_from_handle(event.get_place_handle()).get_title()` |
 | Families | `db.get_family_handles()` → `db.get_family_from_handle(h)` |
 | Family members | `fam.get_father_handle()`, `.get_mother_handle()`, `.get_child_ref_list()` |
