@@ -272,10 +272,12 @@ the user and ask how to proceed. If a search session appears to have expired mid
 
 1. **Survey existing state.** Read any existing `research-notes/*.md` files (dated-section
    prose research logs, if this project uses that convention) alongside the Gramps XML
-   file, and query `data.gramps` itself (persons, families, events, notes — including
-   `[CHANGELOG]` notes from Edit Mode) for what's already known or concluded about the
-   goal. This is fuzzy prose- and data-reading — read closely so you don't redo settled
-   work or contradict a prior conclusion.
+   file. For `data.gramps` itself (persons, families, events, notes — including
+   `[CHANGELOG]` notes from Edit Mode), query it the same way Read Mode does: a Python
+   script using `import_as_dict` and `gramps_python` (see "Python scripting patterns for
+   Read Mode" above for the script shape and the Key API methods table) — never grep the
+   raw XML directly. This is fuzzy prose- and data-reading — read closely so you don't
+   redo settled work or contradict a prior conclusion.
 
 2. **Formulate a plan.** Break the goal into concrete sub-questions (e.g. per-ancestor-
    pair, per-record, per-event). For each, check *structural possibility* before spending
