@@ -331,18 +331,18 @@ Edit Mode changelog notes may reuse these same labels.
 ### Example: structural pre-check for census-gap research
 
 One instance of the "check structural possibility before searching" step (step 2), for a
-census-based lineage-gap goal — other goal types substitute their own constraints for the
-same pattern:
+census-based lineage-gap goal — say, "Research census gaps for Estelle's Varnell
+lineage" — other goal types substitute their own constraints for the same pattern:
 
-- Was the younger person born before the census's enumeration date, and still plausibly
-  living with the older person (unmarried, right age) at that time?
+- Was Estelle born before the census's enumeration date, and still plausibly living with
+  her father Warren (unmarried, right age) at that time?
 - Was that census year *not* one of the known destroyed/missing years (e.g. 1890 US)?
 
-If no census year satisfies both, this is a `permanent-gap` candidate — verify the
-specific reason against primary sources before concluding, then skip straight to
-classification instead of searching. The same shape applies elsewhere: a record's known
-digitization coverage for immigration research, or whether a land-grant office existed
-for a given jurisdiction and period for land research.
+If no census year satisfies both for Estelle and Warren, this is a `permanent-gap`
+candidate — verify the specific reason against primary sources before concluding, then
+skip straight to classification instead of searching. The same shape applies elsewhere: a
+record's known digitization coverage for immigration research, or whether a land-grant
+office existed for a given jurisdiction and period for land research.
 
 ## Validation Mode
 
