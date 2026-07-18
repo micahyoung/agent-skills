@@ -154,6 +154,7 @@ for fam_handle in person.get_parent_family_handle_list():
 | Need | Call |
 |---|---|
 | All people | `db.get_person_handles()` → `db.get_person_from_handle(h)` |
+| Look up by Gramps ID (human-facing id, e.g. `I0001`, not the opaque `handle`) | `db.get_person_from_gramps_id(id)`, and equivalently `get_family_from_gramps_id`, `get_event_from_gramps_id`, `get_place_from_gramps_id`, `get_source_from_gramps_id`, `get_citation_from_gramps_id`, `get_repository_from_gramps_id`; reverse (object → id) is `obj.get_gramps_id()` |
 | Name | `person.get_primary_name().get_first_name()` / `.get_surname()` |
 | Birth date | `date_displayer.display(db.get_event_from_handle(person.get_birth_ref().ref).get_date_object())` (import `displayer as date_displayer` from `gramps.gen.datehandler`; `.get_text()` returns `""` for all structured dates) |
 | Birth place | `db.get_place_from_handle(event.get_place_handle()).get_title()` |
@@ -278,6 +279,13 @@ the user and ask how to proceed. If a search session appears to have expired mid
    Read Mode" above for the script shape and the Key API methods table) — never grep the
    raw XML directly. This is fuzzy prose- and data-reading — read closely so you don't
    redo settled work or contradict a prior conclusion.
+   - If a note contains `[Display Name](gramps:<id>)` links, resolve each one back to its
+     current record with the matching `get_*_from_gramps_id` call (see the Key API methods
+     table) rather than trusting the display name alone. This catches drift — a person
+     renamed, merged, or deleted since the note was written — before you build new
+     conclusions on top of a stale reference. If a link's id no longer resolves, or the
+     record's current display name no longer matches the text in brackets, flag it and
+     confirm with the user before relying on that note's claims.
 
 2. **Formulate a plan.** Break the goal into concrete sub-questions (e.g. per-ancestor-
    pair, per-record, per-event). For each, check *structural possibility* before spending
@@ -312,6 +320,19 @@ the user and ask how to proceed. If a search session appears to have expired mid
    - Prose findings get appended to the relevant `research-notes/*.md` file, in the same
      dated-section style already used there. If no `research-notes/` directory exists,
      ask the user before creating one — this convention varies by project.
+   - **Link records the first time they're mentioned.** When prose in a
+     `research-notes/*.md` file names a person, family, source, citation, or repository
+     that exists (or now exists, after this write) in `data.gramps`, write that first
+     mention as a markdown link of the form `[Display Name](gramps:<gramps_id>)` — e.g.
+     `[Clayton Rufus Varnell](gramps:I0005)`,
+     `[Repository R0001](gramps:R0001)`, `[Citation C0001](gramps:C0001)`. Get the id with
+     `obj.get_gramps_id()` (not `.handle`, which is an opaque internal string, not
+     human-meaningful, and not stable for this purpose). Only the *first* mention of a
+     given record within a bullet/section needs the link — don't re-link every repeated
+     mention of the same name later in the same paragraph or section; plain text is fine
+     after that. This applies only to `gramps:` ids for records inside `data.gramps` —
+     never wrap external record identifiers (FamilySearch ark IDs, Ancestry record URLs,
+     etc.) in this syntax; those stay as plain text exactly as returned by the source.
 
 8. **Checkpoint as you go.** For goals spanning many sub-questions or sessions, append
    each pass's results to the research-notes entry as you finish it, so a resumed session
