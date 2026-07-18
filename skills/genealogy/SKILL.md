@@ -2,18 +2,25 @@
 name: genealogy
 description: >
   Parse, explore, edit, and generate visual reports from Gramps XML (.gramps) genealogy files. Use this skill whenever the user mentions a .gramps file, Gramps XML data, family trees, ancestry, genealogy research, lineage, ancestors, descendants, pedigree charts, family history, heritage, great-grandparents, or wants to look up relatives, trace family connections, find out "who were my relatives", or correct/update genealogical records. Also trigger when the user has a .gramps file open or referenced in conversation and asks questions about people, families, dates, or relationships — even if they don't say "genealogy" explicitly. Trigger for requests involving family tree charts, PDFs, or visualizations of genealogical data.
-compatibility: Requires uv and native Gramps. Uses Bash, Read, and Write tools.
+compatibility: Requires uv and native Gramps. Uses Bash, Read, and Write tools. Research
+  Mode additionally requires a browser-automation tool.
 ---
 
 # Genealogy Skill
 
-You help users explore and edit Gramps XML (.gramps) genealogy files. You have four modes:
+You help users explore and edit Gramps XML (.gramps) genealogy files. You have five modes:
 - **Read Mode** (default)
 - **Edit Mode**
+- **Research Mode**
 - **Validation Mode**
 - **Report Mode**
 
-Always start in Read Mode unless the user explicitly asks to visualize, validate, or make changes.
+Always start in Read Mode unless the user explicitly asks to visualize, validate, or make
+changes, or gives an open-ended research goal (e.g. "/genealogy Research ..." or phrasing
+like "Research X's military service," "Verify Y's immigration record," "Trace Z's land
+grants") — in which case start in Research Mode. If it's ambiguous whether the user wants
+a quick lookup in the existing file (Read Mode) or active external research (Research
+Mode), ask.
 
 ## How You Work
 
@@ -236,6 +243,106 @@ print(f"Saved. {db.get_number_of_people()} people in file.")
 ```
 
 Always use `DbTxn` to wrap all write operations, and re-serialize with `GrampsXmlWriter` after editing.
+
+## Research Mode
+
+Switch to this mode when the user gives an open-ended genealogical research goal rather
+than a single question about existing data — "Research census gaps for [person]'s
+[surname] lineage," "Verify [person]'s immigration record," "Trace [person]'s military
+service," "Find land grants for [person]." Research Mode is not limited to any one record
+type or relationship shape — trust your general genealogical knowledge (census, vital
+records, military, land, probate, immigration, church, DNA, etc.) the same way Read Mode
+trusts you to "adapt freely" to whatever question is asked. The worked example later in
+this section (census-gap analysis) is illustrative, not the whole scope.
+
+### Prerequisites
+
+Research Mode drives real searches against external genealogy sites (e.g. FamilySearch,
+Ancestry) via a browser-automation tool, so it needs one connected and already
+authenticated on the target site. Before starting the search phase:
+- Confirm a browser-automation tool is available in this session.
+- Take a snapshot/screenshot of the target site early and confirm you're logged in, not
+  looking at a login page.
+
+If no browser-automation tool is available, don't guess or silently skip searching — tell
+the user and ask how to proceed. If a search session appears to have expired mid-task
+(empty or nonsensical results), stop and re-check login state rather than concluding a gap.
+
+### The Research Workflow
+
+1. **Survey existing state.** Read any existing `research-notes/*.md` files (dated-section
+   prose research logs, if this project uses that convention) alongside the Gramps XML
+   file, and query `data.gramps` itself (persons, families, events, notes — including
+   `[CHANGELOG]` notes from Edit Mode) for what's already known or concluded about the
+   goal. This is fuzzy prose- and data-reading — read closely so you don't redo settled
+   work or contradict a prior conclusion.
+
+2. **Formulate a plan.** Break the goal into concrete sub-questions (e.g. per-ancestor-
+   pair, per-record, per-event). For each, check *structural possibility* before spending
+   effort searching: given known dates, places, and record-availability facts (destroyed/
+   missing record years, digitization gaps, a person's lifespan or residence), is the
+   thing you're looking for even possible to find? Skip sub-questions that are already
+   structurally impossible, and say why.
+
+3. **Execute searches, one sub-question at a time**, using the browser-automation tool.
+   Expect noisy results — a same-name/same-surname search can return dozens of irrelevant
+   matches; use dates, places, and family context to filter before treating a result as a
+   candidate.
+
+4. **Verify before concluding — always.** Before recording any finding, especially "not
+   found" or "permanent gap," open the full primary record (not just a search-result
+   snippet or an existing research note) and check it directly. This step is not
+   optional: a plausible-looking gap or match can turn out to be wrong once you look at
+   the actual record.
+
+5. **Classify each finding** using the vocabulary below.
+
+6. **Present findings and stop for confirmation** before writing anything — the same
+   "preview → wait for confirmation → apply" rule as Edit Mode. Batch confirmation at
+   natural stopping points rather than after every single item, but never batch
+   `permanent-gap` conclusions without checking in — those read as authoritative once
+   written and could wrongly discourage future research if incorrect.
+
+7. **Write back on confirmation, to both places:**
+   - Structured facts (Events, Citations, Notes, and Tags if this project already uses
+     one) go into `data.gramps` via Edit Mode's existing workflow: `DbTxn` + a
+     `[CHANGELOG]`-prefixed Note + `GrampsXmlWriter`. Reuse that workflow, don't reinvent it.
+   - Prose findings get appended to the relevant `research-notes/*.md` file, in the same
+     dated-section style already used there. If no `research-notes/` directory exists,
+     ask the user before creating one — this convention varies by project.
+
+8. **Checkpoint as you go.** For goals spanning many sub-questions or sessions, append
+   each pass's results to the research-notes entry as you finish it, so a resumed session
+   can pick up by reading the file's own accumulated history.
+
+### Evidence Classification
+
+Use this vocabulary consistently across research goals — not just census work:
+
+| Label | Meaning |
+|---|---|
+| `PROVED` | Direct primary evidence found and verified against the full record. |
+| `found-and-added` | A new, relevant record was located and attached; not yet elevated to `PROVED`. |
+| `not-found-retriable` | Searched and not found, but not proven impossible — worth another pass later. |
+| `permanent-gap` | Provably impossible to find — state the specific structural reason. |
+
+Edit Mode changelog notes may reuse these same labels.
+
+### Example: structural pre-check for census-gap research
+
+One instance of the "check structural possibility before searching" step (step 2), for a
+census-based lineage-gap goal — other goal types substitute their own constraints for the
+same pattern:
+
+- Was the younger person born before the census's enumeration date, and still plausibly
+  living with the older person (unmarried, right age) at that time?
+- Was that census year *not* one of the known destroyed/missing years (e.g. 1890 US)?
+
+If no census year satisfies both, this is a `permanent-gap` candidate — verify the
+specific reason against primary sources before concluding, then skip straight to
+classification instead of searching. The same shape applies elsewhere: a record's known
+digitization coverage for immigration research, or whether a land-grant office existed
+for a given jurisdiction and period for land research.
 
 ## Validation Mode
 
