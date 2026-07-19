@@ -5,6 +5,7 @@ import argparse
 import json
 import os
 import re
+import subprocess
 import sys
 
 from _gramps_backend import TREE_NAME, remove_family_tree, run_gramps
@@ -78,6 +79,35 @@ def validate(input_path: str) -> tuple[list[dict], list[dict]]:
     return _parse_import(import_text), _parse_verify(verify_text)
 
 
+def _run_familysearch_checks(input_path: str) -> list[dict]:
+    """Run the FamilySearch citation convention checks via gramps_python.
+
+    Best-effort: prints a warning to stderr and returns no findings if the
+    check phase itself fails, rather than failing the whole validate run.
+    """
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    gramps_python = os.path.join(script_dir, "gramps_python")
+    checks_script = os.path.join(script_dir, "_familysearch_checks.py")
+
+    result = subprocess.run(
+        [gramps_python, checks_script, input_path],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    if result.returncode != 0:
+        print("Warning: FamilySearch citation checks failed to run:", file=sys.stderr)
+        print(result.stderr, file=sys.stderr)
+        return []
+
+    try:
+        return json.loads(result.stdout)
+    except json.JSONDecodeError:
+        print("Warning: FamilySearch citation checks produced invalid output:", file=sys.stderr)
+        print(result.stdout, file=sys.stderr)
+        return []
+
+
 def _print_text(issues: list[dict], show_noise: bool, input_path: str) -> int:
     visible = issues if show_noise else [i for i in issues if not i["noise"]]
     suppressed = [i for i in issues if i["noise"]] if not show_noise else []
@@ -94,7 +124,7 @@ def _print_text(issues: list[dict], show_noise: bool, input_path: str) -> int:
     if errors:
         print(f"Errors ({len(errors)}):")
         for i in errors:
-            if i["source"] == "verify":
+            if i["source"] in ("verify", "familysearch"):
                 print(f"  E [{i['record_type']} {i['record_id']}] {i['record_name']} — {i['message']}")
             else:
                 print(f"  E [line {i.get('line', '?')}] {i.get('detail', '')}")
@@ -106,7 +136,7 @@ def _print_text(issues: list[dict], show_noise: bool, input_path: str) -> int:
     if warnings:
         print(f"Warnings ({len(warnings)}):")
         for i in warnings:
-            if i["source"] == "verify":
+            if i["source"] in ("verify", "familysearch"):
                 print(f"  W [{i['record_type']} {i['record_id']}] {i['record_name']} — {i['message']}")
             else:
                 print(f"  W [line {i.get('line', '?')}] {i.get('detail', '')}")
@@ -160,7 +190,14 @@ exit codes:
 noise filtering:
   By default, low-signal issues are suppressed from output:
     - "Husband and wife with the same surname" (coincidental, not an error)
+    - FamilySearch URLs using the non-canonical "www." host prefix (style only)
   Use --all to include them.
+
+familysearch checks:
+  Citations/Sources/Notes/Person attributes/Event descriptions mentioning
+  familysearch.org are checked against FamilySearch's documented canonical
+  ARK form and the Gramps community citation convention (see
+  _familysearch_checks.py for details and sources).
 
 examples:
   %(prog)s -i data.gramps
@@ -182,7 +219,8 @@ examples:
         sys.exit(1)
 
     import_issues, verify_issues = validate(input_path)
-    all_issues = import_issues + verify_issues
+    familysearch_issues = _run_familysearch_checks(input_path)
+    all_issues = import_issues + verify_issues + familysearch_issues
 
     if args.format == "json":
         error_count = _print_json(all_issues, show_noise=args.all)
