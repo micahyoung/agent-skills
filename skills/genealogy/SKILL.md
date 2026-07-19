@@ -316,7 +316,9 @@ the user and ask how to proceed. If a search session appears to have expired mid
 7. **Write back on confirmation, to both places:**
    - Structured facts (Events, Citations, Notes, and Tags if this project already uses
      one) go into `data.gramps` via Edit Mode's existing workflow: `DbTxn` + a
-     `[CHANGELOG]`-prefixed Note + `GrampsXmlWriter`. Reuse that workflow, don't reinvent it.
+     `[CHANGELOG]`-prefixed Note + `GrampsXmlWriter`. Reuse that workflow, don't reinvent
+     it — for new Citations, set confidence per the Evidence Classification mapping
+     below, not left at default.
    - Prose findings get appended to the relevant `research-notes/*.md` file, in the same
      dated-section style already used there. If no `research-notes/` directory exists,
      ask the user before creating one — this convention varies by project.
@@ -348,6 +350,17 @@ Use this vocabulary consistently across research goals — not just census work:
 | `found-and-added` | A new, relevant record was located and attached; not yet elevated to `PROVED`. |
 | `not-found-retriable` | Searched and not found, but not proven impossible — worth another pass later. |
 | `permanent-gap` | Provably impossible to find — state the specific structural reason. |
+
+When a finding above `not-found-retriable`/`permanent-gap` produces a Citation, set its
+confidence explicitly — never leave it at the Gramps default and never set every
+citation to the same level:
+
+| Label | Citation confidence |
+|---|---|
+| `PROVED` | `citation.set_confidence_level(Citation.CONF_VERY_HIGH)` |
+| `found-and-added` | `citation.set_confidence_level(Citation.CONF_LOW)` |
+| `not-found-retriable` | n/a — no citation created |
+| `permanent-gap` | n/a — no citation created |
 
 Edit Mode changelog notes may reuse these same labels.
 
