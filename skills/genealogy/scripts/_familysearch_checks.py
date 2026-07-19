@@ -18,6 +18,7 @@ import re
 import sys
 
 from gramps.gen.db.utils import import_as_dict
+from gramps.gen.lib import Citation
 from gramps.cli.user import User
 
 FS_URL_RE = re.compile(
@@ -153,21 +154,32 @@ def scan_citation_structure(db) -> list[dict]:
                 "noise": False,
             })
 
+    citations_by_source = {}
+    for handle in db.get_citation_handles():
+        cit = db.get_citation_from_handle(handle)
+        citations_by_source.setdefault(cit.get_reference_handle(), []).append(cit)
+
     for handle in fs_source_handles:
         src = db.get_source_from_handle(handle)
         call_numbers = [rr.get_call_number() for rr in src.get_reporef_list() if rr.get_call_number()]
-        if not call_numbers:
-            findings.append({
-                "source": "familysearch", "level": "W",
-                "record_type": "Source", "record_id": src.get_gramps_id(),
-                "record_name": _short(src.get_title()),
-                "message": "Source linked to FamilySearch has no Call Number "
-                           "(Digital Folder Number) set on its Repository reference; "
-                           "the 'cite the original record' convention uses this to "
-                           "uniquely identify the record independent of the FamilySearch "
-                           "web presentation.",
-                "noise": False,
-            })
+        if call_numbers:
+            continue
+        related = citations_by_source.get(handle, [])
+        if related and all(c.get_confidence_level() == Citation.CONF_VERY_LOW for c in related):
+            # Every citation for this source is already flagged as unreliable/estimated
+            # evidence, so chasing down a precise Call Number isn't worth the noise.
+            continue
+        findings.append({
+            "source": "familysearch", "level": "W",
+            "record_type": "Source", "record_id": src.get_gramps_id(),
+            "record_name": _short(src.get_title()),
+            "message": "Source linked to FamilySearch has no Call Number "
+                       "(Digital Folder Number) set on its Repository reference; "
+                       "the 'cite the original record' convention uses this to "
+                       "uniquely identify the record independent of the FamilySearch "
+                       "web presentation.",
+            "noise": False,
+        })
 
     return findings
 
