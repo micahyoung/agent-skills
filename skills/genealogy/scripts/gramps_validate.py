@@ -108,6 +108,35 @@ def _run_familysearch_checks(input_path: str) -> list[dict]:
         return []
 
 
+def _run_type_coverage_checks(input_path: str) -> list[dict]:
+    """Run the *Type enum coverage checks via gramps_python.
+
+    Best-effort: prints a warning to stderr and returns no findings if the
+    check phase itself fails, rather than failing the whole validate run.
+    """
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    gramps_python = os.path.join(script_dir, "gramps_python")
+    checks_script = os.path.join(script_dir, "_type_coverage_checks.py")
+
+    result = subprocess.run(
+        [gramps_python, checks_script, input_path],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    if result.returncode != 0:
+        print("Warning: Type coverage checks failed to run:", file=sys.stderr)
+        print(result.stderr, file=sys.stderr)
+        return []
+
+    try:
+        return json.loads(result.stdout)
+    except json.JSONDecodeError:
+        print("Warning: Type coverage checks produced invalid output:", file=sys.stderr)
+        print(result.stdout, file=sys.stderr)
+        return []
+
+
 def _print_text(issues: list[dict], show_noise: bool, input_path: str) -> int:
     visible = issues if show_noise else [i for i in issues if not i["noise"]]
     suppressed = [i for i in issues if i["noise"]] if not show_noise else []
@@ -117,14 +146,15 @@ def _print_text(issues: list[dict], show_noise: bool, input_path: str) -> int:
 
     # Noise breakdown for suppressed message
     noise_surname = sum(1 for i in suppressed if i.get("message") == "Husband and wife with the same surname")
-    noise_other = len(suppressed) - noise_surname
+    noise_blank_field = sum(1 for i in suppressed if i.get("source") == "type_coverage")
+    noise_other = len(suppressed) - noise_surname - noise_blank_field
 
     print(f"\nValidating: {input_path}\n")
 
     if errors:
         print(f"Errors ({len(errors)}):")
         for i in errors:
-            if i["source"] in ("verify", "familysearch"):
+            if i["source"] in ("verify", "familysearch", "type_coverage"):
                 print(f"  E [{i['record_type']} {i['record_id']}] {i['record_name']} — {i['message']}")
             else:
                 print(f"  E [line {i.get('line', '?')}] {i.get('detail', '')}")
@@ -136,7 +166,7 @@ def _print_text(issues: list[dict], show_noise: bool, input_path: str) -> int:
     if warnings:
         print(f"Warnings ({len(warnings)}):")
         for i in warnings:
-            if i["source"] in ("verify", "familysearch"):
+            if i["source"] in ("verify", "familysearch", "type_coverage"):
                 print(f"  W [{i['record_type']} {i['record_id']}] {i['record_name']} — {i['message']}")
             else:
                 print(f"  W [line {i.get('line', '?')}] {i.get('detail', '')}")
@@ -148,6 +178,8 @@ def _print_text(issues: list[dict], show_noise: bool, input_path: str) -> int:
         parts = []
         if noise_surname:
             parts.append(f"{noise_surname} same-surname warning{'s' if noise_surname != 1 else ''}")
+        if noise_blank_field:
+            parts.append(f"{noise_blank_field} blank-field warning{'s' if noise_blank_field != 1 else ''}")
         if noise_other:
             parts.append(f"{noise_other} other low-signal warning{'s' if noise_other != 1 else ''}")
         print(f"Noise suppressed: {', '.join(parts)} (use --all to show)")
@@ -191,6 +223,8 @@ noise filtering:
   By default, low-signal issues are suppressed from output:
     - "Husband and wife with the same surname" (coincidental, not an error)
     - FamilySearch URLs using the non-canonical "www." host prefix (style only)
+    - Blank/unset *Type field warnings (can be numerous; see "type coverage
+      checks" below)
   Use --all to include them.
 
 familysearch checks:
@@ -198,6 +232,14 @@ familysearch checks:
   familysearch.org are checked against FamilySearch's documented canonical
   ARK form and the Gramps community citation convention (see
   _familysearch_checks.py for details and sources).
+
+type coverage checks:
+  Structural fields (EventType, PlaceType, NameType, NameOriginType,
+  ChildRefType, AttributeType, SrcAttributeType, UrlType, RepositoryType,
+  NoteType, FamilyRelType, SourceMediaType, and Citation.Date) are checked
+  for records left at their "blank" value (Unknown, or an empty Date) rather
+  than reviewed and set. Each blank field is its own warning, suppressed by
+  default given the volume these can reach (see _type_coverage_checks.py).
 
 examples:
   %(prog)s -i data.gramps
@@ -220,7 +262,8 @@ examples:
 
     import_issues, verify_issues = validate(input_path)
     familysearch_issues = _run_familysearch_checks(input_path)
-    all_issues = import_issues + verify_issues + familysearch_issues
+    type_coverage_issues = _run_type_coverage_checks(input_path)
+    all_issues = import_issues + verify_issues + familysearch_issues + type_coverage_issues
 
     if args.format == "json":
         error_count = _print_json(all_issues, show_noise=args.all)
