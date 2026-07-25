@@ -414,7 +414,7 @@ python <skill-dir>/scripts/gramps_validate.py -i path/to/data.gramps
 The script runs four phases:
 1. **Import** — catches structural problems loading the Gramps XML file
 2. **Verify** — catches semantic issues (invalid dates, out-of-order births, age anomalies)
-3. **FamilySearch checks** — catches citation convention issues on any Citation/Source/Note/Person attribute/Event description mentioning familysearch.org (non-canonical `www.` URLs, FamilySearch URL stored in Volume/Page instead of a Note, missing Call Number on a FamilySearch-linked Source, bare-ARK Source titles)
+3. **FamilySearch checks** — catches citation convention issues on any Citation/Source/Note/Person attribute/Event description mentioning familysearch.org (non-canonical `www.` URLs, missing Call Number on a FamilySearch Digital Library-linked Source, bare-ARK Source titles)
 4. **Type coverage checks** — catches records left at a blank/unset value on structural fields (EventType, PlaceType, NameType, NameOriginType, ChildRefType, AttributeType, SrcAttributeType, UrlType, RepositoryType, NoteType, FamilyRelType, SourceMediaType, and Citation.Date) instead of being reviewed and set
 
 **Error levels:**

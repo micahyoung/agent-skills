@@ -7,10 +7,9 @@ to stdout, and nothing else.
 Conventions checked, established from:
   - FamilySearch developer docs (canonical ARK form has no "www." prefix)
     https://developers.familysearch.org/main/docs/persistent-identifiers
-  - Gramps Discourse community convention (URL belongs in a Note attached
-    to the Citation, not in Volume/Page; cite the original record via the
-    Source's Repository Call Number)
-    https://gramps.discourse.group/t/help-understanding-family-search-citation/4814
+  - Gramps wiki citation example (cite the original record via the Source's
+    Repository Call Number)
+    https://www.gramps-project.org/wiki/index.php/Citation_examples:FamilySearch
 
 Call Number nuance: a Call Number (Digital Folder Number) only exists for a
 single FamilySearch catalog item (one digitized book/film) -- catalog items
@@ -127,61 +126,31 @@ def scan_familysearch_urls(db) -> list[dict]:
     return findings
 
 
-def _familysearch_source_handles(db) -> tuple[set, set]:
-    """Sources linked to a FamilySearch repository, or mentioning familysearch.org
-    in their own text fields. Returns (all_handles, catalog_handles) -- the
-    second is the subset with a RepoRef into the FamilySearch Digital Library
-    catalog specifically, the only FamilySearch repository type that assigns
-    Call Numbers."""
-    fs_repo_handles = set()
+def _familysearch_catalog_source_handles(db) -> set:
+    """Sources with a RepoRef into a Repository named "FamilySearch Digital
+    Library" -- the only FamilySearch repository type that assigns Call
+    Numbers (Digital Folder Numbers)."""
     catalog_repo_handles = set()
     for handle in db.get_repository_handles():
         repo = db.get_repository_from_handle(handle)
-        name = repo.get_name() or ""
-        if "familysearch" in name.lower():
-            fs_repo_handles.add(handle)
-            if _FS_CATALOG_REPO_RE.search(name):
-                catalog_repo_handles.add(handle)
+        if _FS_CATALOG_REPO_RE.search(repo.get_name() or ""):
+            catalog_repo_handles.add(handle)
 
-    fs_source_handles = set()
     catalog_source_handles = set()
     for handle in db.get_source_handles():
         src = db.get_source_from_handle(handle)
         for reporef in src.get_reporef_list():
-            if reporef.ref in fs_repo_handles:
-                fs_source_handles.add(handle)
             if reporef.ref in catalog_repo_handles:
                 catalog_source_handles.add(handle)
+                break
 
-    for handle in db.get_source_handles():
-        src = db.get_source_from_handle(handle)
-        text = " ".join(filter(None, [src.get_title(), src.get_author(), src.get_publication_info()]))
-        if "familysearch" in text.lower():
-            fs_source_handles.add(handle)
-
-    return fs_source_handles, catalog_source_handles
+    return catalog_source_handles
 
 
 def scan_citation_structure(db) -> list[dict]:
-    """Check C (URL in Volume/Page) and Check D (missing Call Number)."""
+    """Check D (missing Call Number)."""
     findings = []
-    fs_source_handles, catalog_source_handles = _familysearch_source_handles(db)
-
-    for handle in db.get_citation_handles():
-        cit = db.get_citation_from_handle(handle)
-        if cit.get_reference_handle() not in fs_source_handles:
-            continue
-        page = cit.get_page() or ""
-        if FS_URL_RE.search(page):
-            findings.append({
-                "source": "familysearch", "level": "W",
-                "record_type": "Citation", "record_id": cit.get_gramps_id(),
-                "record_name": _short(page),
-                "message": "FamilySearch URL is stored in the Citation's Volume/Page "
-                           "field; the community convention is to store it in a Note "
-                           "attached to the Citation instead.",
-                "noise": False,
-            })
+    catalog_source_handles = _familysearch_catalog_source_handles(db)
 
     citations_by_source = {}
     for handle in db.get_citation_handles():
