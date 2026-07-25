@@ -11,6 +11,21 @@ Conventions checked, established from:
     to the Citation, not in Volume/Page; cite the original record via the
     Source's Repository Call Number)
     https://gramps.discourse.group/t/help-understanding-family-search-citation/4814
+
+Call Number nuance: a Call Number (Digital Folder Number) only exists for a
+single FamilySearch catalog item (one digitized book/film) -- catalog items
+are the ones with a RepoRef into a Repository named "FamilySearch Digital
+Library". A browsable collection/index Source (e.g. "United States Census,
+1930") is instead linked to the general "FamilySearch.org" Repository and has
+no Digital Folder Number to assign; flagging those as missing one would be a
+false positive. A Source with no RepoRef at all (e.g. one that only cites a
+FamilySearch Family Tree person profile, not an archival record) is naturally
+never flagged either, since there's no RepoRef to hold a Call Number in the
+first place. This split was verified against a real Gramps file: every
+Source referencing "FamilySearch Digital Library" had a Call Number set, and
+every Source referencing "FamilySearch.org" (or lacking a RepoRef) had none --
+so the check keys off the linked Repository's Name field rather than parsing
+Source titles or Citation text.
 """
 
 import json
@@ -33,6 +48,11 @@ _ARK_ONLY_TITLE_RE = re.compile(
     r'^\s*(https?://)?(www\.)?(familysearch\.org/)?(familysearch\s+)?ark:/61903/\S+\s*$',
     re.IGNORECASE,
 )
+
+# The FamilySearch Repository whose RepoRefs carry a Call Number (Digital
+# Folder Number) -- as opposed to a Repository named e.g. "FamilySearch.org"
+# for the general historical-records site, which never has one.
+_FS_CATALOG_REPO_RE = re.compile(r'digital library', re.IGNORECASE)
 
 
 def _is_www(url: str) -> bool:
@@ -107,22 +127,31 @@ def scan_familysearch_urls(db) -> list[dict]:
     return findings
 
 
-def _familysearch_source_handles(db) -> set:
+def _familysearch_source_handles(db) -> tuple[set, set]:
     """Sources linked to a FamilySearch repository, or mentioning familysearch.org
-    in their own text fields."""
+    in their own text fields. Returns (all_handles, catalog_handles) -- the
+    second is the subset with a RepoRef into the FamilySearch Digital Library
+    catalog specifically, the only FamilySearch repository type that assigns
+    Call Numbers."""
     fs_repo_handles = set()
+    catalog_repo_handles = set()
     for handle in db.get_repository_handles():
         repo = db.get_repository_from_handle(handle)
-        if "familysearch" in (repo.get_name() or "").lower():
+        name = repo.get_name() or ""
+        if "familysearch" in name.lower():
             fs_repo_handles.add(handle)
+            if _FS_CATALOG_REPO_RE.search(name):
+                catalog_repo_handles.add(handle)
 
     fs_source_handles = set()
+    catalog_source_handles = set()
     for handle in db.get_source_handles():
         src = db.get_source_from_handle(handle)
         for reporef in src.get_reporef_list():
             if reporef.ref in fs_repo_handles:
                 fs_source_handles.add(handle)
-                break
+            if reporef.ref in catalog_repo_handles:
+                catalog_source_handles.add(handle)
 
     for handle in db.get_source_handles():
         src = db.get_source_from_handle(handle)
@@ -130,13 +159,13 @@ def _familysearch_source_handles(db) -> set:
         if "familysearch" in text.lower():
             fs_source_handles.add(handle)
 
-    return fs_source_handles
+    return fs_source_handles, catalog_source_handles
 
 
 def scan_citation_structure(db) -> list[dict]:
     """Check C (URL in Volume/Page) and Check D (missing Call Number)."""
     findings = []
-    fs_source_handles = _familysearch_source_handles(db)
+    fs_source_handles, catalog_source_handles = _familysearch_source_handles(db)
 
     for handle in db.get_citation_handles():
         cit = db.get_citation_from_handle(handle)
@@ -159,7 +188,7 @@ def scan_citation_structure(db) -> list[dict]:
         cit = db.get_citation_from_handle(handle)
         citations_by_source.setdefault(cit.get_reference_handle(), []).append(cit)
 
-    for handle in fs_source_handles:
+    for handle in catalog_source_handles:
         src = db.get_source_from_handle(handle)
         call_numbers = [rr.get_call_number() for rr in src.get_reporef_list() if rr.get_call_number()]
         if call_numbers:
@@ -173,11 +202,10 @@ def scan_citation_structure(db) -> list[dict]:
             "source": "familysearch", "level": "W",
             "record_type": "Source", "record_id": src.get_gramps_id(),
             "record_name": _short(src.get_title()),
-            "message": "Source linked to FamilySearch has no Call Number "
-                       "(Digital Folder Number) set on its Repository reference; "
-                       "the 'cite the original record' convention uses this to "
-                       "uniquely identify the record independent of the FamilySearch "
-                       "web presentation.",
+            "message": "Source linked to the FamilySearch Digital Library catalog has no "
+                       "Call Number (Digital Folder Number) set on its Repository reference; "
+                       "the 'cite the original record' convention uses this to uniquely "
+                       "identify the record independent of the FamilySearch web presentation.",
             "noise": False,
         })
 

@@ -3064,6 +3064,11 @@
       <confidence>2</confidence>
       <sourceref hlink="_103adf847d7875f411e0fd50773b"/>
     </citation>
+    <citation handle="_103adf847d796bd334c76fbf975e" change="1784504414" id="C0003">
+      <confidence>2</confidence>
+      <page>1900 U.S. Census, Millhaven, USA, Sheet 4A (NARA T623)</page>
+      <sourceref hlink="_103adf847d7875f411e0fd50773c"/>
+    </citation>
   </citations>
   <sources>
     <source handle="_103adf847d7091613331de2aed5" change="1784504414" id="S0000">
@@ -3077,6 +3082,10 @@
     <source handle="_103adf847d7875f411e0fd50773b" change="1784504414" id="S0002">
       <stitle>FamilySearch: Clayton Rufus Varnell, Birth Record</stitle>
       <reporef hlink="_103adf847d6ecb48dcaddcf5f5" medium="Book"/>
+    </source>
+    <source handle="_103adf847d7875f411e0fd50773c" change="1784504414" id="S0003">
+      <stitle>United States Census, 1900</stitle>
+      <reporef hlink="_103adf847d6ecb48dcaddcf5f6" medium="Book"/>
     </source>
   </sources>
   <places>
@@ -3295,8 +3304,12 @@
   </places>
   <repositories>
     <repository handle="_103adf847d6ecb48dcaddcf5f5" change="1784504414" id="R0000">
-      <rname>FamilySearch</rname>
+      <rname>FamilySearch Digital Library</rname>
       <type>Archive</type>
+    </repository>
+    <repository handle="_103adf847d6ecb48dcaddcf5f6" change="1784504414" id="R0001">
+      <rname>FamilySearch.org</rname>
+      <type>Website</type>
     </repository>
   </repositories>
   <notes>

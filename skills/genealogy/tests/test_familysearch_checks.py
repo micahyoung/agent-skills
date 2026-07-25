@@ -60,6 +60,18 @@ class FamilySearchCallNumberChecks(unittest.TestCase):
         self.assertEqual(finding["record_type"], "Source")
         self.assertIn("Clayton Rufus Varnell", finding["record_name"])
 
+    def test_collection_source_never_warns(self):
+        # S0003: "United States Census, 1900" — linked to the general
+        # "FamilySearch.org" repository, not the "FamilySearch Digital
+        # Library" catalog, so it never has a Call Number to assign and
+        # should never be flagged, regardless of citation confidence.
+        self.assertNotIn(
+            "S0003", self.call_number_findings,
+            "Source linked to the general FamilySearch.org repository (a browsable "
+            "collection, not a single catalog item) should never warn for a missing "
+            "Call Number",
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
