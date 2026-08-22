@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Gramps Python interpreter wrapper.
 
-Acts like a python interpreter that can import the Gramps libraries
-using the native macOS Gramps app bundle.
+Acts like a python interpreter that can import the Gramps libraries. On
+macOS it uses the native Gramps app bundle; on other systems (e.g. the
+PyPI/venv install on Linux) it uses the gramps-enabled python found on PATH.
 
 Usage:
     gramps_python -c "code"
@@ -33,6 +34,21 @@ def _find_python313() -> str | None:
             resolved = shutil.which(path)
             if resolved:
                 return resolved
+    return None
+
+
+def _find_gramps_python() -> str | None:
+    """Find a Python that can `import gramps` on non-macOS systems.
+
+    Derived from the `gramps` CLI on PATH (e.g. an activated venv): the
+    interpreter that runs the CLI can also import the gramps libraries.
+    """
+    gramps_bin = shutil.which("gramps")
+    if not gramps_bin:
+        return None
+    candidate = os.path.join(os.path.dirname(os.path.realpath(gramps_bin)), "python")
+    if os.path.isfile(candidate) and os.access(candidate, os.X_OK):
+        return candidate
     return None
 
 
@@ -67,18 +83,27 @@ def _run_native(python_path: str, user_args: list[str]) -> None:
 def main() -> None:
     user_args = sys.argv[1:]
 
+    # macOS: native Python 3.13 + Gramps.app bundle resources.
     python_path = _find_python313()
     if python_path and find_gramps_app_resources():
         _run_native(python_path, user_args)
-    else:
-        print(
-            "Error: Gramps Python not available.\n\n"
-            "Requires:\n"
-            "  - Gramps app bundle at /Applications/Gramps.app\n"
-            "  - Python 3.13 at /opt/homebrew/bin/python3.13 (or in PATH)\n",
-            file=sys.stderr,
-        )
-        sys.exit(1)
+        return
+
+    # Linux / other: a gramps-enabled python derived from the gramps CLI (venv).
+    gramps_python = _find_gramps_python()
+    if gramps_python:
+        os.execve(gramps_python, [gramps_python] + user_args, os.environ.copy())
+        return
+
+    print(
+        "Error: Gramps Python not available.\n\n"
+        "Requires one of:\n"
+        "  - macOS: Gramps.app bundle + Python 3.13 at /opt/homebrew/bin/python3.13, OR\n"
+        "  - Linux: a gramps-enabled python on PATH (e.g. an activated venv from the\n"
+        "           PyPI install — `source /home/user/gramps-venv/bin/activate`)\n",
+        file=sys.stderr,
+    )
+    sys.exit(1)
 
 
 if __name__ == "__main__":
