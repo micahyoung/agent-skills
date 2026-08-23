@@ -100,12 +100,14 @@ Default to natural language prose. If the user asks for a specific format (markd
 
 Here's the general shape of a read script (run with `<skill-dir>/scripts/gramps_python script.py`):
 
+Always pass `quiet=True` to `User` in headless scripts — a plain `User()` prints a per-object progress bar to stderr that renders as a `00%…100%` dump outside a TTY.
+
 ```python
 from gramps.gen.db.utils import import_as_dict
 from gramps.cli.user import User
 from gramps.gen.datehandler import displayer as date_displayer
 
-db = import_as_dict("data.gramps", User())
+db = import_as_dict("data.gramps", User(quiet=True))
 
 # Example: find an individual by surname fragment
 for handle in db.get_person_handles():
@@ -223,7 +225,7 @@ from gramps.gen.lib import Note, NoteType
 import datetime
 
 filepath = "data.gramps"
-db = import_as_dict(filepath, User())
+db = import_as_dict(filepath, User(quiet=True))
 
 # Locate target person, make changes to the object...
 
@@ -239,7 +241,7 @@ with DbTxn("Update Clay's occupation", db) as txn:
     person.add_note(note.handle)
     db.commit_person(person, txn)
 
-GrampsXmlWriter(db, compress=0, version=VERSION, user=User()).write(filepath)
+GrampsXmlWriter(db, compress=0, version=VERSION, user=User(quiet=True)).write(filepath)
 print(f"Saved. {db.get_number_of_people()} people in file.")
 ```
 

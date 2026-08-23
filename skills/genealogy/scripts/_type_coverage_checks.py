@@ -243,7 +243,7 @@ def find_blank_fields(db) -> list[dict]:
 
 def main():
     filepath = sys.argv[1]
-    db = import_as_dict(filepath, User())
+    db = import_as_dict(filepath, User(quiet=True))
 
     print(json.dumps(find_blank_fields(db)))
 

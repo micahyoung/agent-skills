@@ -26,7 +26,7 @@ def list_people(input_file):
     python_code = f'''
 from gramps.gen.db.utils import import_as_dict
 from gramps.cli.user import User
-db = import_as_dict({input_path!r}, User())
+db = import_as_dict({input_path!r}, User(quiet=True))
 for handle in db.get_person_handles():
     person = db.get_person_from_handle(handle)
     name = person.get_primary_name()

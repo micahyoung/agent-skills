@@ -56,7 +56,7 @@ def validate(input_path: str) -> tuple[list[dict], list[dict]]:
 
     shell_script = (
         f"echo '=== IMPORT ===' && "
-        f'gramps -y -C {TREE_NAME} -i "$GRAMPS_WORK_DIR/{input_name}" 2>&1 && '
+        f'gramps -y -C {TREE_NAME} -i "$GRAMPS_WORK_DIR/{input_name}" -q 2>&1 && '
         f"echo '=== VERIFY ===' && "
         f"gramps -O {TREE_NAME} -a tool -p name=verify 2>&1"
     )

@@ -203,7 +203,7 @@ def scan_title_quality(db) -> list[dict]:
 
 def main():
     filepath = sys.argv[1]
-    db = import_as_dict(filepath, User())
+    db = import_as_dict(filepath, User(quiet=True))
 
     findings = (
         scan_familysearch_urls(db)
