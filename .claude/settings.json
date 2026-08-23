@@ -13,8 +13,8 @@
       "Bash(grep *)",
       "Bash(diff *)",
       "Bash(wc *)",
-      "Write(genealogy-workspace/*)",
-      "Write(skills/genealogy/*)",
+      "Edit(genealogy-workspace/*)",
+      "Edit(skills/genealogy/*)",
       "Read(*)"
     ]
   }
